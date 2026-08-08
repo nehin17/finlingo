@@ -16,7 +16,7 @@ import SignInModal from './components/auth/SignInModal.jsx'
 import SignUpModal from './components/auth/SignUpModal.jsx'
 import ChatDrawer from './components/shared/ChatDrawer.jsx'
 
-import CaseStudyDetailPage from './components/learn/CaseStudyDetail'
+import CaseStudyDetailPage from './components/learn/CaseStudyDetail.jsx'
 
 
 export default function App() {

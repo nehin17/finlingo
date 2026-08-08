@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import Sidebar from '../layout/Sidebar.jsx'
 import Navbar from '../layout/Navbar.jsx'
-import LearnHero from '../learn/LearnHero'
-import ProgressDashboard from '../learn/ProgressDashboard'
-import LearningPaths from '../learn/LearningPaths'
-import FeaturedCaseStudies from '../learn/FeaturedCaseStudies'
-import MiniAnalystChallenge from '../learn/MiniAnalystChallenge'
-import InteractiveTools from '../learn/InteractiveTools'
-import ConceptLibrary from '../learn/ConceptLibrary'
+import LearnHero from '../learn/LearnHero.jsx'
+import ProgressDashboard from '../learn/ProgressDashboard.jsx'
+import LearningPaths from '../learn/LearningPaths.jsx'
+import FeaturedCaseStudies from '../learn/FeaturedCaseStudies.jsx'
+import MiniAnalystChallenge from '../learn/MiniAnalystChallenge.jsx'
+import InteractiveTools from '../learn/InteractiveTools.jsx'
+import ConceptLibrary from '../learn/ConceptLibrary.jsx'
 
 export default function LearnHub(props) {
   return (
