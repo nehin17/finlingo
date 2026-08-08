@@ -1,4 +1,5 @@
 // src/components/home/HeroSection.jsx
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
@@ -8,11 +9,13 @@ import {
   BarChart2,
   Sparkles,
   ChevronRight,
+  Play,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import SearchBar from '../shared/SearchBar.jsx'
 import Button from '../shared/Button.jsx'
+import LiveDemoModal from '../demo/LiveDemoModal.jsx'
 
 const tickers = ['AAPL', 'NVDA', 'TSLA', 'MSFT', 'AMZN']
 
@@ -118,13 +121,9 @@ function DashboardMockup() {
           </div>
 
           <div className="text-right">
-            <p
-              className="font-bold"
-              style={{ color: 'var(--text)' }}
-            >
+            <p className="font-bold" style={{ color: 'var(--text)' }}>
               $875.40
             </p>
-
             <span
               className="text-xs font-semibold flex items-center gap-1 justify-end"
               style={{ color: 'var(--success)' }}
@@ -139,30 +138,23 @@ function DashboardMockup() {
         <div className="grid grid-cols-3 gap-3 mb-4">
           {[
             { label: 'Revenue Growth', value: '+122%', color: 'var(--success)' },
-            { label: 'Op. Margin', value: '54.1%', color: 'var(--primary)' },
-            { label: 'P/E Ratio', value: '65.2x', color: 'var(--warning)' },
+            { label: 'Op. Margin',     value: '54.1%', color: 'var(--primary)' },
+            { label: 'P/E Ratio',      value: '65.2x', color: 'var(--warning)' },
           ].map((kpi) => (
             <div
               key={kpi.label}
               className="rounded-lg p-2.5 text-center border"
               style={{
-                background: 'var(--surface-2)',
-                borderColor: 'var(--border)',
+                background:   'var(--surface-2)',
+                borderColor:  'var(--border)',
               }}
             >
-              <p
-                className="font-bold text-sm"
-                style={{ color: kpi.color }}
-              >
+              <p className="font-bold text-sm" style={{ color: kpi.color }}>
                 {kpi.value}
               </p>
-
               <p
                 className="text-xs mt-0.5"
-                style={{
-                  fontSize: '10px',
-                  color: 'var(--text-muted)',
-                }}
+                style={{ fontSize: '10px', color: 'var(--text-muted)' }}
               >
                 {kpi.label}
               </p>
@@ -197,7 +189,7 @@ function DashboardMockup() {
           className="flex items-center gap-2 rounded-lg px-3 py-2.5"
           style={{
             background: 'rgba(37,99,235,0.08)',
-            border: '1px solid rgba(37,99,235,0.2)',
+            border:     '1px solid rgba(37,99,235,0.2)',
           }}
         >
           <div className="flex items-center gap-1.5">
@@ -217,15 +209,9 @@ function DashboardMockup() {
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: '87%' }}
-              transition={{
-                delay: 0.5,
-                duration: 1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+              transition={{ delay: 0.5, duration: 1, ease: [0.22, 1, 0.36, 1] }}
               className="h-full rounded-full"
-              style={{
-                background: 'linear-gradient(90deg, #2563EB, #4F46E5)',
-              }}
+              style={{ background: 'linear-gradient(90deg, #2563EB, #4F46E5)' }}
             />
           </div>
 
@@ -240,10 +226,7 @@ function DashboardMockup() {
         {/* Grounded badge */}
         <div className="flex items-center gap-1.5 mt-3">
           <ShieldCheck size={12} style={{ color: 'var(--success)' }} />
-          <span
-            className="text-xs"
-            style={{ color: 'var(--text-muted)' }}
-          >
+          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
             Grounded answer — SEC filings + live data
           </span>
         </div>
@@ -252,34 +235,22 @@ function DashboardMockup() {
       {/* Floating secondary card */}
       <motion.div
         animate={{ y: [0, 5, 0] }}
-        transition={{
-          duration: 4,
-          ease: 'easeInOut',
-          repeat: Infinity,
-          delay: 1,
-        }}
+        transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, delay: 1 }}
         className="absolute -bottom-10 -left-8 rounded-xl border p-3 backdrop-blur-sm"
         style={{
-          background: 'var(--surface)',
+          background:  'var(--surface)',
           borderColor: 'var(--border)',
-          boxShadow: 'var(--shadow-md)',
-          width: '160px',
+          boxShadow:   'var(--shadow-md)',
+          width:       '160px',
         }}
       >
         <div className="flex items-center gap-2 mb-2">
           <Brain size={12} style={{ color: 'var(--secondary)' }} />
-          <span
-            className="text-xs font-semibold"
-            style={{ color: 'var(--text-muted)' }}
-          >
+          <span className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
             AI Insight
           </span>
         </div>
-
-        <p
-          className="text-xs leading-relaxed"
-          style={{ color: 'var(--text-muted)' }}
-        >
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
           Data center revenue surged 408% driven by H100 GPU demand.
         </p>
       </motion.div>
@@ -307,187 +278,201 @@ const itemVariants = {
 }
 
 export default function HeroSection({ onSignUpClick }) {
+  const [demoOpen, setDemoOpen] = useState(false)
+
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden pt-[72px]">
-      {/* Background */}
-      <div
-        className="absolute inset-0 transition-colors duration-300"
-        style={{ background: 'var(--bg)' }}
-      />
+    <>
+      <section className="relative min-h-screen flex items-center overflow-hidden pt-[72px]">
+        {/* Background */}
+        <div
+          className="absolute inset-0 transition-colors duration-300"
+          style={{ background: 'var(--bg)' }}
+        />
 
-      <AnimatedGrid />
+        <AnimatedGrid />
 
-      {/* Radial glow */}
-      <motion.div
-        animate={{
-          opacity: [0.35, 0.6, 0.35],
-          scale: [1, 1.05, 1],
-        }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        className="absolute pointer-events-none"
-        style={{
-          width: '600px',
-          height: '600px',
-          right: '5%',
-          top: '10%',
-          background:
-            'radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
+        {/* Radial glow */}
+        <motion.div
+          animate={{
+            opacity: [0.35, 0.6, 0.35],
+            scale:   [1, 1.05, 1],
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute pointer-events-none"
+          style={{
+            width:      '600px',
+            height:     '600px',
+            right:      '5%',
+            top:        '10%',
+            background: 'radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%)',
+            filter:     'blur(60px)',
+          }}
+        />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-8 w-full py-20">
-        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
-          {/* Left column */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="flex-1 max-w-2xl"
-          >
-            {/* Badge */}
-            <motion.div variants={itemVariants} className="mb-6">
-              <span
-                className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full border"
-                style={{
-                  color: 'var(--primary)',
-                  borderColor: 'rgba(37,99,235,0.25)',
-                  background: 'rgba(37,99,235,0.06)',
-                }}
-              >
-                <Sparkles size={12} />
-                AI-powered market intelligence
-              </span>
-            </motion.div>
+        <div className="relative z-10 max-w-[1440px] mx-auto px-8 w-full py-20">
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
 
-            {/* Heading */}
-            <motion.h1
-              variants={itemVariants}
-              className="font-bold leading-[1.08] mb-6 text-balance"
-              style={{
-                fontSize: 'clamp(40px, 6vw, 64px)',
-                color: 'var(--text)',
-              }}
-            >
-              Research stocks like a{' '}
-              <span
-                style={{
-                  background:
-                    'linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                professional analyst
-              </span>
-            </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              variants={itemVariants}
-              className="text-lg leading-relaxed mb-8 max-w-xl"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              Search any company, compare competitors, understand financial
-              terms, and get AI-generated insights grounded in real market data
-              and SEC filings.
-            </motion.p>
-
-            {/* Search */}
-            <motion.div variants={itemVariants} className="mb-6">
-              <SearchBar large className="w-full max-w-xl" />
-            </motion.div>
-
-            {/* Trending Tickers */}
+            {/* Left column */}
             <motion.div
-              variants={itemVariants}
-              className="flex flex-wrap items-center gap-2 mb-8"
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="flex-1 max-w-2xl"
             >
-              <span
-                className="text-xs font-medium"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                Trending:
-              </span>
-
-              {tickers.map((ticker) => (
-                <button
-                  key={ticker}
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-150 hover:scale-105"
+              {/* Badge */}
+              <motion.div variants={itemVariants} className="mb-6">
+                <span
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full border"
                   style={{
-                    borderColor: 'var(--border)',
-                    color: 'var(--text-muted)',
-                    background: 'var(--surface)',
+                    color:       'var(--primary)',
+                    borderColor: 'rgba(37,99,235,0.25)',
+                    background:  'rgba(37,99,235,0.06)',
                   }}
                 >
-                  {ticker}
-                </button>
-              ))}
-            </motion.div>
+                  <Sparkles size={12} />
+                  AI-powered market intelligence
+                </span>
+              </motion.div>
 
-            {/* CTAs */}
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
-              <Button size="lg" onClick={onSignUpClick}>
-                Get started free
-                <ArrowRight size={16} />
-              </Button>
+              {/* Heading */}
+              <motion.h1
+                variants={itemVariants}
+                className="font-bold leading-[1.08] mb-6 text-balance"
+                style={{
+                  fontSize: 'clamp(40px, 6vw, 64px)',
+                  color:    'var(--text)',
+                }}
+              >
+                Research stocks like a{' '}
+                <span
+                  style={{
+                    background:            'linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)',
+                    WebkitBackgroundClip:  'text',
+                    WebkitTextFillColor:   'transparent',
+                    backgroundClip:        'text',
+                  }}
+                >
+                  professional analyst
+                </span>
+              </motion.h1>
 
-              <Link to="/dashboard">
-                <Button size="lg" variant="secondary">
-                  View live demo
-                  <ChevronRight size={16} />
-                </Button>
-              </Link>
-            </motion.div>
+              {/* Subtitle */}
+              <motion.p
+                variants={itemVariants}
+                className="text-lg leading-relaxed mb-8 max-w-xl"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                Search any company, compare competitors, understand financial
+                terms, and get AI-generated insights grounded in real market
+                data and SEC filings.
+              </motion.p>
 
-            {/* Trust badges */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-wrap items-center gap-6 mt-10 pt-8 border-t"
-              style={{ borderColor: 'var(--border)' }}
-            >
-              {[
-                { icon: ShieldCheck, text: 'SEC-grounded data' },
-                { icon: Brain, text: 'AI-powered insights' },
-                { icon: BarChart2, text: 'Real-time markets' },
-              ].map(({ icon: Icon, text }) => (
-                <div key={text} className="flex items-center gap-2">
-                  <Icon size={14} style={{ color: 'var(--primary)' }} />
-                  <span
-                    className="text-xs"
-                    style={{ color: 'var(--text-muted)' }}
+              {/* Search */}
+              <motion.div variants={itemVariants} className="mb-6">
+                <SearchBar large className="w-full max-w-xl" />
+              </motion.div>
+
+              {/* Trending Tickers */}
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-wrap items-center gap-2 mb-8"
+              >
+                <span
+                  className="text-xs font-medium"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  Trending:
+                </span>
+
+                {tickers.map((ticker) => (
+                  <button
+                    key={ticker}
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-150 hover:scale-105"
+                    style={{
+                      borderColor: 'var(--border)',
+                      color:       'var(--text-muted)',
+                      background:  'var(--surface)',
+                    }}
                   >
-                    {text}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
+                    {ticker}
+                  </button>
+                ))}
+              </motion.div>
 
-          {/* Right column */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{
-              duration: 0.8,
-              delay: 0.3,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="flex-shrink-0 w-full lg:w-auto flex justify-center"
-          >
-            <DashboardMockup />
-          </motion.div>
+              {/* CTAs */}
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-wrap gap-3"
+              >
+                {/* Primary CTA */}
+                <Button size="lg" onClick={onSignUpClick}>
+                  Get started
+                  <ArrowRight size={16} />
+                </Button>
+
+                {/* Demo CTA */}
+                <button
+                  onClick={() => setDemoOpen(true)}
+                  className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 hover:scale-105 active:scale-100"
+                  style={{
+                    borderColor: 'var(--border)',
+                    color:       'var(--text-muted)',
+                    background:  'var(--surface)',
+                  }}
+                >
+                  <div
+                    className="w-6 h-6 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(37,99,235,0.12)' }}
+                  >
+                    <Play
+                      size={10}
+                      style={{ color: 'var(--primary)', marginLeft: '1px' }}
+                    />
+                  </div>
+                  Watch live demo
+                </button>
+              </motion.div>
+
+              {/* Trust badges */}
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-wrap items-center gap-6 mt-10 pt-8 border-t"
+                style={{ borderColor: 'var(--border)' }}
+              >
+                {[
+                  { icon: ShieldCheck, text: 'SEC-grounded data'   },
+                  { icon: Brain,       text: 'AI-powered insights'  },
+                  { icon: BarChart2,   text: 'Real-time markets'    },
+                ].map(({ icon: Icon, text }) => (
+                  <div key={text} className="flex items-center gap-2">
+                    <Icon size={14} style={{ color: 'var(--primary)' }} />
+                    <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                      {text}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            {/* Right column */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="flex-shrink-0 w-full lg:w-auto flex justify-center"
+            >
+              <DashboardMockup />
+            </motion.div>
+
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Live Demo Modal */}
+      <LiveDemoModal
+        open={demoOpen}
+        onClose={() => setDemoOpen(false)}
+      />
+    </>
   )
 }
-
-
-
-
