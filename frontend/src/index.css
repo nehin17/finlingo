@@ -1,27 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================
+   LIGHT THEME (DEFAULT)
+=========================== */
 :root {
-  --bg: #FAFAF7;
-  --surface: #FFFFFF;
-  --ink: #14171F;
-  --ink-soft: #565B66;
-  --border: #E4E1D6;
-  --teal: #0B5E52;
-  --teal-light: #E3EEEC;
-  --gain: #1F8A5F;
-  --loss: #B0402F;
-}
-html, body, #root {
-  width: 100%;
-  min-height: 100vh;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-elevated: #f8fafc;
+  --surface-hover: #f8fafc;
+  --divider: #e2e8f0;
+
+  --text: #0f172a;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  --border: #e2e8f0;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+  --error: #dc2626;
+  --warning: #f59e0b;
+
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.08);
+
+  --font-main: 'Outfit', sans-serif;
 }
 
+/* ===========================
+   DARK THEME
+   (triggered by class on <html>)
+=========================== */
+html.dark,
+.dark {
+  --bg: #0b1220;
+  --surface: #111827;
+  --surface-elevated: #1e293b;
+  --surface-hover: #1e293b;
+  --divider: #243244;
+
+  --text: #f8fafc;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --primary: #60a5fa;
+  --primary-hover: #93c5fd;
+
+  --border: #243244;
+
+  --success: #22c55e;
+  --danger: #ef4444;
+  --error: #ef4444;
+  --warning: #f59e0b;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ===========================
+   GLOBAL RESET
+=========================== */
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
+  min-width: 320px;
   background: var(--bg);
-  color: var(--ink);
-  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+/* ===========================
+   LAYOUT
+=========================== */
+.container-main {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+@media (max-width: 768px) {
+  .container-main {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* ===========================
+   TYPOGRAPHY
+=========================== */
+h1,
+h2,
+h3 {
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+h1 {
+  font-size: 56px;
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 22px;
+}
+
+p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 42px;
+  }
+  h2 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 36px;
+  }
+  h2 {
+    font-size: 26px;
+  }
+}
+
+/* ===========================
+   BUTTONS / LINKS
+=========================== */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button,
+a {
+  transition: color 0.2s ease, background 0.2s ease, border 0.2s ease, transform 0.2s ease;
+}
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
 }
