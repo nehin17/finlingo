@@ -1,38 +1,37 @@
-// src/components/home/FinalCTA.jsx
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react'
 import Button from '../shared/Button.jsx'
-import { Link } from 'react-router-dom'
 
 export default function FinalCTA({ onSignUpClick }) {
   return (
-    <section className="relative overflow-hidden py-32 px-8 flex items-center justify-center min-h-[480px]">
-
-      {/* ── Background layers ──────────────────────────────────────────── */}
-     
+    <section className="relative overflow-hidden py-24 px-6 flex items-center justify-center">
+      {/* Background */}
       <div
         className="absolute inset-0 transition-colors duration-300"
         style={{ background: 'var(--bg)' }}
       />
 
-      
       <div
         className="absolute inset-0 transition-colors duration-300"
         style={{
-          background: 'radial-gradient(circle at center, rgba(37,99,235,0.18) 0%, transparent 70%)',
+          background:
+            'radial-gradient(circle at center, rgba(37,99,235,0.18) 0%, transparent 70%)',
         }}
       />
 
-      {/* Animated rings — rgba primary tints work in both themes */}
-      {[0, 1, 2].map(i => (
+      {/* Animated rings */}
+      {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
           className="absolute rounded-full border border-primary/10 pointer-events-none"
           style={{
-            width:  `${300 + i * 200}px`,
+            width: `${300 + i * 200}px`,
             height: `${300 + i * 200}px`,
           }}
-          animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.1, 0.3] }}
+          animate={{
+            scale: [1, 1.05, 1],
+            opacity: [0.3, 0.1, 0.3],
+          }}
           transition={{
             duration: 4 + i,
             repeat: Infinity,
@@ -42,7 +41,7 @@ export default function FinalCTA({ onSignUpClick }) {
         />
       ))}
 
-      {/* ── Content ────────────────────────────────────────────────────── */}
+      {/* Content */}
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -50,6 +49,7 @@ export default function FinalCTA({ onSignUpClick }) {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 text-center max-w-3xl mx-auto"
       >
+        {/* Badge */}
         <div className="flex justify-center mb-6">
           <span
             className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full border"
@@ -64,6 +64,7 @@ export default function FinalCTA({ onSignUpClick }) {
           </span>
         </div>
 
+        {/* Heading */}
         <h2
           className="font-bold text-text-primary leading-tight mb-6"
           style={{ fontSize: 'clamp(32px, 5vw, 52px)' }}
@@ -71,26 +72,32 @@ export default function FinalCTA({ onSignUpClick }) {
           Your next investment decision deserves better tools
         </h2>
 
+        {/* Description */}
         <p className="text-text-secondary text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-          Join FinLingo to search companies, compare competitors, learn financial concepts,
-          and get AI-powered insights grounded in real market data and SEC filings.
+          Join FinLingo to search companies, compare competitors, learn
+          financial concepts, and get AI-powered insights grounded in real
+          market data and SEC filings.
         </p>
 
+        {/* Buttons */}
         <div className="flex flex-wrap gap-4 justify-center">
           <Button size="lg" onClick={onSignUpClick}>
             Create free account
             <ArrowRight size={18} />
           </Button>
-          <Link to="/dashboard">
+
+          <a href="#product-tour">
             <Button size="lg" variant="secondary">
-              Explore live demo
+              Take a product tour
               <ChevronRight size={18} />
             </Button>
-          </Link>
+          </a>
         </div>
 
+        {/* Footer text */}
         <p className="text-xs text-text-muted mt-6">
-          No credit card required • Free forever for basic research
+          Product preview available instantly • No signup required to explore
+          the tour
         </p>
       </motion.div>
     </section>

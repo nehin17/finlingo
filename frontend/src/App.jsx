@@ -14,9 +14,10 @@ import Markets from './components/pages/Markets.jsx';
 
 import SignInModal from './components/auth/SignInModal.jsx'
 import SignUpModal from './components/auth/SignUpModal.jsx'
-import ChatDrawer from './components/shared/ChatDrawer.jsx'
 
 import CaseStudyDetailPage from './components/learn/CaseStudyDetail.jsx'
+
+import FloatingAIAssistant from './components/ai/FloatingAIAssistant.jsx'
 
 
 export default function App() {
@@ -28,7 +29,7 @@ export default function App() {
 
   const [showSignIn, setShowSignIn] = useState(false)
   const [showSignUp, setShowSignUp] = useState(false)
-  const [showChat, setShowChat] = useState(false)
+  
 
 
 
@@ -141,14 +142,6 @@ export default function App() {
 
     onSignOut: handleSignOut,
 
-
-    onChatToggle: () => {
-      setShowChat((prev) => !prev)
-    },
-
-
-    showChat
-
   }
 
 
@@ -221,7 +214,8 @@ export default function App() {
 
       </Routes>
 
-
+      {/* GLOBAL AI ASSISTANT */}
+      <FloatingAIAssistant />
 
 
       {/* SIGN IN MODAL */}
@@ -282,30 +276,11 @@ export default function App() {
         />
 
       )}
-
-
-
-
-
-
-      {/* AI CHAT DRAWER */}
-
-      {showChat && (
-
-        <ChatDrawer
-
-          onClose={() =>
-            setShowChat(false)
-          }
-
-        />
-
-      )}
-
-
-
     </BrowserRouter>
-
   )
-
 }
+
+
+
+
+

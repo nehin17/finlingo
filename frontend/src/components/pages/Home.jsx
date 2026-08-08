@@ -5,8 +5,6 @@ import Footer from '../layout/Footer.jsx'
 import HeroSection from '../home/HeroSection.jsx'
 import MarketTicker from '../home/MarketTicker.jsx'
 import FeatureCarousel from '../home/FeatureCarousel.jsx'
-import AIResearchPreview from '../home/AIResearchPreview.jsx'
-import MarketPulseGrid from '../home/MarketPulseGrid.jsx'
 import ProductShowcase from '../home/ScrollShowcase.jsx'
 import FinalCTA from '../home/FinalCTA.jsx'
 
@@ -22,24 +20,26 @@ export default function Home(props) {
       <Navbar {...props} />
 
       <main className="pt-16">
-        <HeroSection 
+        <HeroSection
           onSignUpClick={props.onSignUpClick}
         />
 
         <MarketTicker />
 
-        <FeatureCarousel />
+        {/* Product Tour Section */}
+        <div
+          id="product-tour"
+          className="scroll-mt-24"
+        >
+          <FeatureCarousel />
+        </div>
 
-        {/* ✅ REMOVED: AIResearchPreview & MarketPulseGrid */}
-        {/* <AIResearchPreview /> */}
-        {/* <MarketPulseGrid /> */}
-
-        {/* Premium horizontal showcase section with proper spacing */}
+        {/* Premium horizontal showcase section */}
         <div className="py-12 sm:py-20 lg:py-24">
           <ProductShowcase />
         </div>
 
-        <FinalCTA 
+        <FinalCTA
           onSignUpClick={props.onSignUpClick}
         />
       </main>

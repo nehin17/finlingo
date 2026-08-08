@@ -315,33 +315,58 @@ export default function FeatureCarousel() {
     <section className="py-24 px-8 overflow-hidden">
       <div className="max-w-[1440px] mx-auto">
 
-        {/* Tab buttons */}
-        <div className="flex flex-wrap justify-center gap-2 mb-16">
-          {slides.map((s, i) => {
-            const Icon = s.icon
-            return (
-              <button
-                key={s.id}
-                onClick={() => goTo(i)}
-                className={`
-                  flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
-                  transition-all duration-200
-                  ${active === i
-                    ? 'text-white'
-                    : 'text-text-muted hover:text-text-primary hover:bg-surface-elevated border border-border'
-                  }
-                `}
-                style={active === i ? {
-                  background: 'linear-gradient(135deg, #2563EB, #4F46E5)',
-                } : {}}
-              >
-                <Icon size={15} />
-                {s.badge}
-              </button>
-            )
-          })}
-        </div>
+       {/* Tab buttons */}
+<div className="flex flex-wrap justify-center gap-3 mb-16">
+  {slides.map((s, i) => {
+    const Icon = s.icon
 
+    return (
+      <button
+        key={s.id}
+        onClick={() => goTo(i)}
+        onMouseEnter={(e) => {
+          if (active !== i) {
+            e.currentTarget.style.background =
+              'linear-gradient(135deg, #020617, #0F172A)'
+            e.currentTarget.style.color = '#ffffff'
+            e.currentTarget.style.borderColor = '#1E293B'
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (active !== i) {
+            e.currentTarget.style.background = 'var(--surface)'
+            e.currentTarget.style.color = 'var(--text-muted)'
+            e.currentTarget.style.borderColor = 'var(--border)'
+          }
+        }}
+        className={`
+          flex items-center gap-2
+          px-4 py-2.5
+          rounded-xl
+          text-sm font-medium
+          border
+          transition-all duration-300
+          ${active === i ? 'text-white border-transparent shadow-lg' : ''}
+        `}
+        style={
+          active === i
+            ? {
+                background: 'linear-gradient(135deg, #2563EB, #4F46E5)',
+                boxShadow: '0 10px 30px rgba(37, 99, 235, 0.25)',
+              }
+            : {
+                background: 'var(--surface)',
+                color: 'var(--text-muted)',
+                borderColor: 'var(--border)',
+              }
+        }
+      >
+        <Icon size={15} />
+        {s.badge}
+      </button>
+    )
+  })}
+</div>
         {/* Content grid */}
         <div className="grid lg:grid-cols-2 gap-16 items-center">
 
