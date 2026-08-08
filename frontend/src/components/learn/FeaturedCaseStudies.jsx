@@ -31,9 +31,7 @@ const caseStudies = [
     title: "Amazon's Cash Flow Paradox",
     description:
       'Learn why high revenue growth can coexist with low accounting profits in investment-heavy business models.',
-    companies: [
-      { ticker: 'AMZN', color: '#FF9900' },
-    ],
+    companies: [{ ticker: 'AMZN', color: '#FF9900' }],
     difficulty: 'Intermediate',
     readTime: 15,
     color: '#FF9900',
@@ -42,9 +40,7 @@ const caseStudies = [
     title: 'Tesla: Growth at What Cost?',
     description:
       'Analyze valuation sustainability when growth rates eventually normalize in mature markets.',
-    companies: [
-      { ticker: 'TSLA', color: '#E82127' },
-    ],
+    companies: [{ ticker: 'TSLA', color: '#E82127' }],
     difficulty: 'Advanced',
     readTime: 18,
     color: '#E82127',
@@ -56,9 +52,8 @@ export default function FeaturedCaseStudies() {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const scrollAmount = 360
       scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        left: direction === 'left' ? -360 : 360,
         behavior: 'smooth',
       })
     }
@@ -67,13 +62,16 @@ export default function FeaturedCaseStudies() {
   return (
     <div className="mb-16">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-text-primary mb-2">Featured Case Studies</h2>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">
+          Featured Case Studies
+        </h2>
         <p className="text-base text-text-muted">
           Real-world financial analysis with actual companies from the market.
         </p>
       </div>
 
-      <div className="relative">
+      {/* ✅ px-8 instead of negative margins for nav buttons */}
+      <div className="relative px-8">
         {/* Scroll Container */}
         <div
           ref={scrollRef}
@@ -85,24 +83,23 @@ export default function FeaturedCaseStudies() {
           ))}
         </div>
 
-        {/* Navigation Buttons */}
+        {/* ✅ Use left-0 / right-0 instead of -left-4 / -right-4 */}
         <button
           onClick={() => scroll('left')}
-          className="absolute -left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border flex items-center justify-center text-text-muted hover:text-primary hover:border-primary transition-all"
-          style={{
-            background: 'var(--surface)',
-            borderColor: 'var(--border)',
-          }}
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border
+                     flex items-center justify-center text-text-muted
+                     hover:text-primary hover:border-primary transition-all"
+          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
         >
           <ChevronLeft size={20} />
         </button>
+
         <button
           onClick={() => scroll('right')}
-          className="absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border flex items-center justify-center text-text-muted hover:text-primary hover:border-primary transition-all"
-          style={{
-            background: 'var(--surface)',
-            borderColor: 'var(--border)',
-          }}
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border
+                     flex items-center justify-center text-text-muted
+                     hover:text-primary hover:border-primary transition-all"
+          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
         >
           <ChevronRight size={20} />
         </button>
