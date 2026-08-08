@@ -16,7 +16,7 @@ const initialMessages = [
   {
     id: 1,
     role: 'ai',
-    content: "Hello! I'm PulseBoard AI. Ask me anything about stocks, financial metrics, or market trends. I'll provide insights grounded in real market data and SEC filings.",
+    content: "Hello! I'm FinLingo AI. Ask me anything about stocks, financial metrics, or market trends. I'll provide insights grounded in real market data and SEC filings.",
     time: 'Just now',
   },
 ]
@@ -119,7 +119,7 @@ export default function ChatDrawer({ onClose }) {
             <Sparkles size={16} className="text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-text-primary text-sm">PulseBoard AI</h3>
+            <h3 className="font-semibold text-text-primary text-sm">FinLingo AI</h3>
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
               <span className="text-xs text-text-muted">Online • Grounded answers</span>

@@ -21,7 +21,7 @@ export default function AIInsightCard({ insight }) {
 
           <div>
             <span className="section-eyebrow">
-              PulseBoard Intelligence
+              FinLingo Intelligence
             </span>
             <h2>AI Analyst Note</h2>
           </div>

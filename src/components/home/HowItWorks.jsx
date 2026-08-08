@@ -9,7 +9,7 @@ const steps = [
     icon: Search,
     title: 'Search any company',
     description:
-      'Type any ticker or company name. PulseBoard instantly retrieves live financials, SEC filings, and recent news.',
+      'Type any ticker or company name. FinLingo instantly retrieves live financials, SEC filings, and recent news.',
     color: '#2563EB',
     bg: 'rgba(37,99,235,0.10)',
   },
@@ -46,7 +46,7 @@ export default function HowItWorks() {
         <SectionHeader
           badge="How it works"
           title="Research any stock in three simple steps"
-          subtitle="From discovery to comparison, PulseBoard turns hours of financial research into a streamlined AI-assisted workflow."
+          subtitle="From discovery to comparison, FinLingo turns hours of financial research into a streamlined AI-assisted workflow."
           className="mb-8"
         />
 

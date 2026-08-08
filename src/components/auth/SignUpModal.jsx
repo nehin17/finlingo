@@ -124,7 +124,7 @@ export default function SignUpModal({ onClose, onSuccess, onSwitchToSignIn }) {
             <Check size={36} style={{ color: '#10B981' }} />
           </motion.div>
           <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Welcome to PulseBoard!
+            Welcome to FinLingo!
           </h3>
           <p style={{ color: 'var(--text-muted)' }}>Setting up your personalized experience...</p>
         </motion.div>
@@ -164,7 +164,7 @@ export default function SignUpModal({ onClose, onSuccess, onSwitchToSignIn }) {
                   <BarChart2 size={14} className="text-white" />
                 </div>
                 <span className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
-                  PulseBoard
+                  FinLingo
                 </span>
               </div>
               <button

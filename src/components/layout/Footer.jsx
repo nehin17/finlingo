@@ -92,7 +92,7 @@ export default function Footer() {
                   color: 'var(--text)',
                 }}
               >
-                PulseBoard
+                FinLingo
               </h3>
 
             </div>
@@ -292,7 +292,7 @@ export default function Footer() {
             color: 'var(--text-muted)',
           }}
         >
-          © {new Date().getFullYear()} PulseBoard. All rights reserved.
+          © {new Date().getFullYear()} FinLingo. All rights reserved.
         </p>
 
       </div>

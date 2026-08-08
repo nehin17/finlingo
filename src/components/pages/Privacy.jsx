@@ -45,7 +45,7 @@ export default function Privacy(props) {
             {/* Introduction */}
             <section>
               <p>
-                At PulseBoard, we value your privacy and are committed to
+                At FinLingo, we value your privacy and are committed to
                 being transparent about how information is collected, used,
                 and protected when you use our platform.
               </p>
@@ -53,7 +53,7 @@ export default function Privacy(props) {
               <p className="mt-4">
                 This Privacy Policy explains what information we may collect,
                 why we collect it, how we use it, and the choices available to
-                you when using PulseBoard.
+                you when using FinLingo.
               </p>
             </section>
 
@@ -68,7 +68,7 @@ export default function Privacy(props) {
               </h2>
 
               <p>
-                Depending on how you use PulseBoard, we may collect the
+                Depending on how you use FinLingo, we may collect the
                 following categories of information.
               </p>
 
@@ -99,7 +99,7 @@ export default function Privacy(props) {
               </h3>
 
               <p>
-                When you interact with PulseBoard, we may store information
+                When you interact with FinLingo, we may store information
                 associated with your use of the platform, including:
               </p>
 
@@ -121,7 +121,7 @@ export default function Privacy(props) {
 
               <p>
                 We may automatically receive certain technical information
-                when you access PulseBoard, such as:
+                when you access FinLingo, such as:
               </p>
 
               <ul className="list-disc list-inside space-y-2 mt-3">
@@ -153,12 +153,12 @@ export default function Privacy(props) {
               <p>We may use the information we collect to:</p>
 
               <ul className="list-disc list-inside space-y-2 mt-3">
-                <li>Create and maintain your PulseBoard account</li>
+                <li>Create and maintain your FinLingo account</li>
                 <li>Provide access to platform features</li>
                 <li>Personalize your research experience</li>
                 <li>Maintain your watchlists and preferences</li>
                 <li>Provide AI-powered research and insights</li>
-                <li>Improve the functionality and usability of PulseBoard</li>
+                <li>Improve the functionality and usability of FinLingo</li>
                 <li>Understand how users interact with our platform</li>
                 <li>Detect, investigate, and prevent fraud, abuse, or security issues</li>
                 <li>Communicate with you about your account or the platform</li>
@@ -168,7 +168,7 @@ export default function Privacy(props) {
 
               <p className="mt-4">
                 We do not use your personal information for purposes unrelated
-                to the operation and improvement of PulseBoard without
+                to the operation and improvement of FinLingo without
                 appropriate notice or consent where required.
               </p>
             </section>
@@ -184,7 +184,7 @@ export default function Privacy(props) {
               </h2>
 
               <p>
-                PulseBoard may provide AI-powered features designed to help
+                FinLingo may provide AI-powered features designed to help
                 users research companies, understand financial information,
                 summarize information, and explore market-related topics.
               </p>
@@ -218,7 +218,7 @@ export default function Privacy(props) {
               </h2>
 
               <p>
-                PulseBoard may display financial information, market data,
+                FinLingo may display financial information, market data,
                 company information, news, research, and other financial
                 content obtained from third-party sources or data providers.
               </p>
@@ -229,7 +229,7 @@ export default function Privacy(props) {
               </p>
 
               <p className="mt-4">
-                PulseBoard is intended as a research and informational
+                FinLingo is intended as a research and informational
                 platform and does not provide personalized investment,
                 financial, legal, or tax advice.
               </p>
@@ -256,7 +256,7 @@ export default function Privacy(props) {
 
               <p>
                 We may use trusted third-party providers to help operate
-                PulseBoard, such as providers for hosting, authentication,
+                FinLingo, such as providers for hosting, authentication,
                 analytics, communications, data storage, or other
                 infrastructure.
               </p>
@@ -278,7 +278,7 @@ export default function Privacy(props) {
               <ul className="list-disc list-inside space-y-2 mt-3">
                 <li>Comply with applicable law or legal processes</li>
                 <li>Respond to lawful requests from authorities</li>
-                <li>Protect the rights, safety, and property of PulseBoard, our users, or others</li>
+                <li>Protect the rights, safety, and property of FinLingo, our users, or others</li>
                 <li>Investigate fraud, abuse, or security incidents</li>
               </ul>
 
@@ -290,7 +290,7 @@ export default function Privacy(props) {
               </h3>
 
               <p>
-                If PulseBoard is involved in a merger, acquisition, financing,
+                If FinLingo is involved in a merger, acquisition, financing,
                 restructuring, sale of assets, or similar transaction,
                 information associated with the platform may be transferred
                 as part of that transaction, subject to applicable law.
@@ -395,7 +395,7 @@ export default function Privacy(props) {
               </h2>
 
               <p>
-                PulseBoard may use cookies or similar technologies to maintain
+                FinLingo may use cookies or similar technologies to maintain
                 sessions, remember preferences, understand platform usage,
                 improve performance, and support security.
               </p>
@@ -421,13 +421,13 @@ export default function Privacy(props) {
               </h2>
 
               <p>
-                PulseBoard may integrate with or link to third-party services,
+                FinLingo may integrate with or link to third-party services,
                 websites, data providers, or other platforms.
               </p>
 
               <p className="mt-4">
                 Those services operate under their own privacy policies and
-                terms. PulseBoard is not responsible for the privacy practices
+                terms. FinLingo is not responsible for the privacy practices
                 of third-party services that it does not control.
               </p>
 
@@ -448,7 +448,7 @@ export default function Privacy(props) {
               </h2>
 
               <p>
-                PulseBoard is not intended for children who are not legally
+                FinLingo is not intended for children who are not legally
                 permitted to use financial or investment-related services in
                 their jurisdiction.
               </p>
@@ -470,7 +470,7 @@ export default function Privacy(props) {
               </h2>
 
               <p>
-                We may update this Privacy Policy as PulseBoard evolves or as
+                We may update this Privacy Policy as FinLingo evolves or as
                 legal and regulatory requirements change.
               </p>
 
@@ -497,17 +497,17 @@ export default function Privacy(props) {
 
               <p>
                 If you have questions, concerns, or requests regarding this
-                Privacy Policy or the way PulseBoard handles information,
+                Privacy Policy or the way FinLingo handles information,
                 please contact us at:
               </p>
 
               <p className="mt-4">
                 <a
-                  href="mailto:privacy@pulseboard.com"
+                  href="mailto:privacy@finlingo.com"
                   className="font-medium transition-colors duration-200"
                   style={{ color: 'var(--primary)' }}
                 >
-                  privacy@pulseboard.com
+                  privacy@finlingo.com
                 </a>
               </p>
             </section>
@@ -519,7 +519,7 @@ export default function Privacy(props) {
               style={{ borderColor: 'var(--border)' }}
             >
               <p>
-                PulseBoard is designed to provide financial research and
+                FinLingo is designed to provide financial research and
                 intelligence tools. Information available through the
                 platform should not be interpreted as personalized financial,
                 investment, legal, or tax advice.

@@ -72,7 +72,7 @@ export default function FinalCTA({ onSignUpClick }) {
         </h2>
 
         <p className="text-text-secondary text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-          Join PulseBoard to search companies, compare competitors, learn financial concepts,
+          Join FinLingo to search companies, compare competitors, learn financial concepts,
           and get AI-powered insights grounded in real market data and SEC filings.
         </p>
 

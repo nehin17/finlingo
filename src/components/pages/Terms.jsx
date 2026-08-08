@@ -44,13 +44,13 @@ export default function Terms(props) {
             {/* Introduction */}
             <section>
               <p>
-                Welcome to PulseBoard. These Terms of Service govern your
-                access to and use of the PulseBoard platform, including our
+                Welcome to FinLingo. These Terms of Service govern your
+                access to and use of the FinLingo platform, including our
                 website, applications, features, content, and services.
               </p>
 
               <p className="mt-4">
-                By accessing or using PulseBoard, you acknowledge that you
+                By accessing or using FinLingo, you acknowledge that you
                 have read, understood, and agree to be bound by these Terms.
                 If you do not agree with these Terms, you should not access
                 or use the platform.
@@ -68,14 +68,14 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                You must be legally permitted to use PulseBoard under the laws
+                You must be legally permitted to use FinLingo under the laws
                 applicable to you. By using the platform, you represent that
                 you meet any applicable age, contractual, and legal
                 requirements.
               </p>
 
               <p className="mt-4">
-                If you are using PulseBoard on behalf of an organization, you
+                If you are using FinLingo on behalf of an organization, you
                 represent that you have the authority to bind that
                 organization to these Terms.
               </p>
@@ -92,7 +92,7 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                Certain PulseBoard features may require you to create an
+                Certain FinLingo features may require you to create an
                 account. You are responsible for providing accurate
                 information and keeping your account information up to date.
               </p>
@@ -105,7 +105,7 @@ export default function Terms(props) {
 
               <p className="mt-4">
                 If you believe your account has been accessed without your
-                authorization, you should notify PulseBoard as soon as
+                authorization, you should notify FinLingo as soon as
                 reasonably possible.
               </p>
             </section>
@@ -121,7 +121,7 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                PulseBoard provides financial research and intelligence tools
+                FinLingo provides financial research and intelligence tools
                 for informational and research purposes.
               </p>
 
@@ -158,20 +158,20 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                PulseBoard and its associated software, design, branding,
+                FinLingo and its associated software, design, branding,
                 interfaces, graphics, text, features, and other original
-                materials are owned by or licensed to PulseBoard and are
+                materials are owned by or licensed to FinLingo and are
                 protected by applicable intellectual property laws.
               </p>
 
               <p className="mt-4">
-                These Terms do not transfer ownership of PulseBoard or its
+                These Terms do not transfer ownership of FinLingo or its
                 intellectual property to you.
               </p>
 
               <p className="mt-4">
                 You retain ownership of content or information that you
-                independently provide to PulseBoard, subject to the rights
+                independently provide to FinLingo, subject to the rights
                 necessary for us to operate the platform and provide the
                 requested services.
               </p>
@@ -188,25 +188,25 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                PulseBoard may provide access to financial data, market data,
+                FinLingo may provide access to financial data, market data,
                 company information, news, research, summaries, analytics,
                 charts, and other financial content.
               </p>
 
               <p className="mt-4">
-                Such information may originate from PulseBoard, third-party
+                Such information may originate from FinLingo, third-party
                 data providers, public sources, or other external sources.
               </p>
 
               <p className="mt-4">
                 Financial and market information may be delayed, incomplete,
-                inaccurate, or subject to change without notice. PulseBoard
+                inaccurate, or subject to change without notice. FinLingo
                 does not guarantee the accuracy, completeness, reliability,
                 timeliness, or availability of such information.
               </p>
 
               <p className="mt-4 font-medium" style={{ color: 'var(--text)' }}>
-                PulseBoard is a financial research and information platform.
+                FinLingo is a financial research and information platform.
                 It does not provide personalized investment, financial, legal,
                 accounting, or tax advice.
               </p>
@@ -223,7 +223,7 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                PulseBoard may provide AI-powered tools that help users
+                FinLingo may provide AI-powered tools that help users
                 research companies, summarize information, analyze financial
                 content, and explore market-related topics.
               </p>
@@ -242,7 +242,7 @@ export default function Terms(props) {
               </p>
 
               <p className="mt-4">
-                PulseBoard does not guarantee that AI-generated information
+                FinLingo does not guarantee that AI-generated information
                 will be accurate, complete, current, or suitable for your
                 individual circumstances.
               </p>
@@ -259,13 +259,13 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                PulseBoard may integrate with or provide links to third-party
+                FinLingo may integrate with or provide links to third-party
                 services, websites, data providers, APIs, or other platforms.
               </p>
 
               <p className="mt-4">
                 Third-party services may operate under their own terms,
-                policies, and privacy practices. PulseBoard does not control
+                policies, and privacy practices. FinLingo does not control
                 and is not responsible for third-party services or content
                 that it does not own or operate.
               </p>
@@ -287,7 +287,7 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                We aim to keep PulseBoard available and reliable, but we do
+                We aim to keep FinLingo available and reliable, but we do
                 not guarantee that the platform will always be available,
                 uninterrupted, secure, or error-free.
               </p>
@@ -310,13 +310,13 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                If PulseBoard allows you to submit feedback, suggestions,
+                If FinLingo allows you to submit feedback, suggestions,
                 comments, or other content, you agree that the material will
                 not violate applicable laws or the rights of others.
               </p>
 
               <p className="mt-4">
-                By submitting feedback or suggestions about PulseBoard, you
+                By submitting feedback or suggestions about FinLingo, you
                 grant us permission to use that feedback to improve or develop
                 our products and services without an obligation to compensate
                 you, unless otherwise agreed in writing.
@@ -338,11 +338,11 @@ export default function Terms(props) {
                 of the platform if we reasonably believe that you have
                 violated these Terms, created a security risk, engaged in
                 fraudulent or abusive behavior, or otherwise used the platform
-                in a manner that could harm PulseBoard or others.
+                in a manner that could harm FinLingo or others.
               </p>
 
               <p className="mt-4">
-                You may stop using PulseBoard at any time. Certain provisions
+                You may stop using FinLingo at any time. Certain provisions
                 of these Terms may continue to apply after termination where
                 their nature requires continued application.
               </p>
@@ -359,12 +359,12 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                PulseBoard is provided on an "as is" and "as available" basis
+                FinLingo is provided on an "as is" and "as available" basis
                 to the extent permitted by applicable law.
               </p>
 
               <p className="mt-4">
-                To the extent permitted by law, PulseBoard disclaims
+                To the extent permitted by law, FinLingo disclaims
                 warranties, express or implied, relating to the platform,
                 including warranties of accuracy, reliability,
                 merchantability, fitness for a particular purpose, and
@@ -389,7 +389,7 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                To the maximum extent permitted by applicable law, PulseBoard
+                To the maximum extent permitted by applicable law, FinLingo
                 and its affiliates, service providers, and partners will not
                 be responsible for indirect, incidental, special,
                 consequential, or punitive damages arising from or related to
@@ -400,7 +400,7 @@ export default function Terms(props) {
                 This includes, where permitted by law, losses relating to
                 data, profits, business interruption, investment decisions,
                 financial losses, or reliance on information made available
-                through PulseBoard.
+                through FinLingo.
               </p>
             </section>
 
@@ -416,7 +416,7 @@ export default function Terms(props) {
 
               <p>
                 To the extent permitted by applicable law, you agree to
-                indemnify and hold harmless PulseBoard and its affiliates,
+                indemnify and hold harmless FinLingo and its affiliates,
                 officers, employees, and service providers from claims,
                 liabilities, damages, losses, and expenses arising from your
                 violation of these Terms, misuse of the platform, or
@@ -435,7 +435,7 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                Your use of PulseBoard is also governed by our Privacy Policy,
+                Your use of FinLingo is also governed by our Privacy Policy,
                 which explains how we collect, use, store, and protect
                 information associated with your use of the platform.
               </p>
@@ -452,7 +452,7 @@ export default function Terms(props) {
               </h2>
 
               <p>
-                We may update these Terms from time to time as PulseBoard
+                We may update these Terms from time to time as FinLingo
                 develops or as legal, regulatory, or operational requirements
                 change.
               </p>
@@ -463,7 +463,7 @@ export default function Terms(props) {
               </p>
 
               <p className="mt-4">
-                Your continued use of PulseBoard after updated Terms become
+                Your continued use of FinLingo after updated Terms become
                 effective constitutes acceptance of the revised Terms, to the
                 extent permitted by applicable law.
               </p>
@@ -481,13 +481,13 @@ export default function Terms(props) {
 
               <p>
                 These Terms will be governed by and interpreted in accordance
-                with the applicable laws governing PulseBoard, without regard
+                with the applicable laws governing FinLingo, without regard
                 to conflict-of-law principles, except where applicable law
                 requires otherwise.
               </p>
 
               <p className="mt-4">
-                Any dispute arising from these Terms or your use of PulseBoard
+                Any dispute arising from these Terms or your use of FinLingo
                 will be handled in accordance with applicable law and any
                 applicable dispute-resolution requirements.
               </p>
@@ -510,11 +510,11 @@ export default function Terms(props) {
 
               <p className="mt-4">
                 <a
-                  href="mailto:legal@pulseboard.com"
+                  href="mailto:legal@finlingo.com"
                   className="font-medium transition-colors duration-200"
                   style={{ color: 'var(--primary)' }}
                 >
-                  legal@pulseboard.com
+                  legal@finlingo.com
                 </a>
               </p>
             </section>
@@ -526,7 +526,7 @@ export default function Terms(props) {
               style={{ borderColor: 'var(--border)' }}
             >
               <p>
-                PulseBoard provides financial research and intelligence tools
+                FinLingo provides financial research and intelligence tools
                 for informational purposes. Information available through the
                 platform should not be interpreted as personalized financial,
                 investment, legal, accounting, or tax advice.

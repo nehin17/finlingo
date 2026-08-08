@@ -553,7 +553,7 @@ export const COMPANY_RESEARCH = {
         '5Y': stock.change ?? 0,
       },
       whyMatters:
-        `${stock.name} is included in the PulseBoard research universe because of its market position, financial profile, and relevance within the ${stock.sector} sector.`,
+        `${stock.name} is included in the FinLingo research universe because of its market position, financial profile, and relevance within the ${stock.sector} sector.`,
       aiInsight: {
         businessSnapshot:
           `${stock.name} operates within the ${stock.sector} sector. Additional business-segment data will be connected when live company fundamentals are available.`,

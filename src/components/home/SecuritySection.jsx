@@ -28,7 +28,7 @@ const trustCards = [
     bg: 'rgba(79,70,229,0.12)',
     title: 'Learn as You Research',
     description:
-      'PulseBoard explains complex financial concepts in plain English as you explore. No finance degree required.',
+      'FinLingo explains complex financial concepts in plain English as you explore. No finance degree required.',
     features: ['Interactive glossary', 'Quiz tracking', 'Learning history', 'Personalized path'],
   },
 ]

@@ -259,7 +259,7 @@ export default function SignInModal({ onClose, onSuccess, onSwitchToSignUp }) {
               >
                 <BarChart2 size={16} className="text-white" />
               </div>
-              <span className="font-bold text-text-primary">PulseBoard</span>
+              <span className="font-bold text-text-primary">FinLingo</span>
             </div>
 
             {/* Value Prop */}

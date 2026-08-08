@@ -76,7 +76,7 @@ export default function Navbar({
               className="text-xl sm:text-2xl font-bold tracking-tight"
               style={{ color: 'var(--text)' }}
             >
-              PulseBoard
+              FinLingo
             </span>
           </Link>
 
