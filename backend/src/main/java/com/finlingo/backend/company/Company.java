@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "company")
 public class Company {
 
     @Id
@@ -20,7 +20,7 @@ public class Company {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(length = 20)
+    @Column(length = 100)
     private String exchange;
 
     @Column(length = 50)
