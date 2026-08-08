@@ -68,7 +68,8 @@ export default function ConceptCard({ concept, isCompleted }) {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl p-6 border border-border hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer group"
+        className="rounded-xl p-6 border border-border hover:border-primary/50
+                   hover:shadow-lg transition-all cursor-pointer group"
         style={{ background: 'var(--surface)' }}
       >
         <div className="flex items-start justify-between mb-3">
@@ -79,10 +80,7 @@ export default function ConceptCard({ concept, isCompleted }) {
             <div className="flex gap-2 flex-wrap">
               <span
                 className="text-xs px-3 py-1 rounded-full font-semibold"
-                style={{
-                  background: `${concept.color}20`,
-                  color: concept.color,
-                }}
+                style={{ background: `${concept.color}20`, color: concept.color }}
               >
                 {concept.category}
               </span>
@@ -108,11 +106,9 @@ export default function ConceptCard({ concept, isCompleted }) {
           </div>
           {concept.hasFormula && (
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                setShowFormula(true)
-              }}
-              className="flex items-center gap-1 text-xs text-primary font-semibold hover:text-primary/80 transition-colors"
+              onClick={(e) => { e.stopPropagation(); setShowFormula(true) }}
+              className="flex items-center gap-1 text-xs text-primary font-semibold
+                         hover:text-primary/80 transition-colors"
             >
               <BookMarked size={14} />
               Formula
@@ -120,10 +116,9 @@ export default function ConceptCard({ concept, isCompleted }) {
           )}
           {concept.hasQuiz && (
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-              }}
-              className="flex items-center gap-1 text-xs text-primary font-semibold hover:text-primary/80 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1 text-xs text-primary font-semibold
+                         hover:text-primary/80 transition-colors"
             >
               <CheckCircle size={14} />
               Quiz
@@ -132,6 +127,7 @@ export default function ConceptCard({ concept, isCompleted }) {
         </div>
       </motion.div>
 
+      {/* ✅ Modal — relative wrapper on inner div so absolute close btn works */}
       {showFormula && formula && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -144,20 +140,27 @@ export default function ConceptCard({ concept, isCompleted }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border"
+            className="relative rounded-2xl p-8 max-w-2xl w-full max-h-[90vh]
+                       overflow-y-auto border border-border"
             style={{ background: 'var(--surface)' }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* ✅ absolute works now because parent has relative */}
             <button
               onClick={() => setShowFormula(false)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-lg border border-border hover:bg-surface-elevated flex items-center justify-center text-text-muted hover:text-text-primary transition-all"
+              className="absolute top-4 right-4 w-10 h-10 rounded-lg border border-border
+                         hover:bg-surface-elevated flex items-center justify-center
+                         text-text-muted hover:text-text-primary transition-all"
             >
               <X size={20} />
             </button>
 
             <h3 className="text-2xl font-bold text-text-primary mb-6">{concept.name}</h3>
 
-            <div className="mb-8 p-6 rounded-lg border border-primary/30" style={{ background: 'var(--surface-elevated)' }}>
+            <div
+              className="mb-8 p-6 rounded-lg border border-primary/30"
+              style={{ background: 'var(--surface-elevated)' }}
+            >
               <p className="text-xs text-text-muted font-semibold mb-3 uppercase">Formula</p>
               <p className="text-lg font-bold text-primary font-mono">{formula.formula}</p>
             </div>
@@ -166,7 +169,11 @@ export default function ConceptCard({ concept, isCompleted }) {
               <h4 className="text-lg font-bold text-text-primary mb-4">Variable Definitions</h4>
               <div className="space-y-3">
                 {formula.variables.map((variable, i) => (
-                  <div key={i} className="p-4 rounded-lg border border-border" style={{ background: 'var(--surface-elevated)' }}>
+                  <div
+                    key={i}
+                    className="p-4 rounded-lg border border-border"
+                    style={{ background: 'var(--surface-elevated)' }}
+                  >
                     <p className="font-semibold text-text-primary mb-1">{variable.name}</p>
                     <p className="text-sm text-text-secondary">{variable.description}</p>
                   </div>
@@ -174,19 +181,30 @@ export default function ConceptCard({ concept, isCompleted }) {
               </div>
             </div>
 
-            <div className="mb-8 p-6 rounded-lg border-l-4" style={{ background: 'var(--surface-elevated)', borderColor: concept.color }}>
+            <div
+              className="mb-8 p-6 rounded-lg border-l-4"
+              style={{ background: 'var(--surface-elevated)', borderColor: concept.color }}
+            >
               <p className="text-sm text-text-muted font-semibold mb-2 uppercase">Interpretation</p>
-              <p className="text-base text-text-secondary leading-relaxed">{formula.interpretation}</p>
+              <p className="text-base text-text-secondary leading-relaxed">
+                {formula.interpretation}
+              </p>
             </div>
 
-            <div className="p-6 rounded-lg border border-border mb-8" style={{ background: 'var(--surface-elevated)' }}>
-              <p className="text-sm text-text-muted font-semibold mb-3 uppercase">Practical Example</p>
+            <div
+              className="p-6 rounded-lg border border-border mb-8"
+              style={{ background: 'var(--surface-elevated)' }}
+            >
+              <p className="text-sm text-text-muted font-semibold mb-3 uppercase">
+                Practical Example
+              </p>
               <p className="text-base text-text-secondary leading-relaxed">{formula.example}</p>
             </div>
 
             <button
               onClick={() => setShowFormula(false)}
-              className="w-full px-6 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-all"
+              className="w-full px-6 py-3 rounded-lg bg-primary text-white font-semibold
+                         hover:bg-primary/90 transition-all"
             >
               Close
             </button>

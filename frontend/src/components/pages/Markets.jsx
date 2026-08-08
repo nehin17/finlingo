@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react';
 
+import Sidebar from '../layout/Sidebar.jsx'
+import Navbar from '../layout/Navbar.jsx'
+
 import MarketOverviewStrip from '../markets/MarketOverviewStrip';
 import SearchFilterToolbar from '../markets/SearchFilterToolbar';
 import StockDiscoveryList from '../markets/StockDiscoveryList';
@@ -120,7 +123,7 @@ function getVisibleStocks({
   return result;
 }
 
-export default function Markets() {
+export default function Markets(props) {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('All Stocks');
   const [sortBy, setSortBy] = useState('default');
@@ -214,41 +217,65 @@ export default function Markets() {
   }
 
   return (
-    <main className="markets-root">
-      <MarketOverviewStrip />
-
-      <SearchFilterToolbar
-        search={search}
-        onSearchChange={handleSearchChange}
-        onSearchSubmit={handleSearchSubmit}
-        activeFilter={activeFilter}
-        onFilterChange={handleFilterChange}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-      />
-
-      <div className="markets-page-container">
-        <div className="markets-workspace">
-          <aside className="markets-left">
-            <StockDiscoveryList
-              stocks={visibleStocks}
-              selectedTicker={selectedTicker}
-              onSelect={setSelectedTicker}
+    <>
+      <Navbar {...props} />
+  
+      <div
+        className="flex w-full"
+        style={{
+          background: 'var(--bg)',
+          color: 'var(--text)',
+        }}
+      >
+        {/* Sidebar */}
+        <Sidebar {...props} />
+  
+        {/* Main Content */}
+        <div className="flex-1 min-w-0">
+          <main className="w-full pt-20 sm:pt-24 pb-16 overflow-x-hidden">
+  
+            <MarketOverviewStrip />
+  
+            <SearchFilterToolbar
+              search={search}
+              onSearchChange={handleSearchChange}
+              onSearchSubmit={handleSearchSubmit}
               activeFilter={activeFilter}
+              onFilterChange={handleFilterChange}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
             />
-          </aside>
-
-          <section className="markets-right">
-            <CompanyResearchPanel
-              stock={selectedStock}
-              isWatching={watchedTickers.has(selectedStock.ticker)}
-              onToggleWatch={() => toggleWatch(selectedStock.ticker)}
-            />
-          </section>
+  
+            <div className="markets-page-container">
+              <div className="markets-workspace">
+  
+                <aside className="markets-left">
+                  <StockDiscoveryList
+                    stocks={visibleStocks}
+                    selectedTicker={selectedTicker}
+                    onSelect={setSelectedTicker}
+                    activeFilter={activeFilter}
+                  />
+                </aside>
+  
+                <section className="markets-right">
+                  <CompanyResearchPanel
+                    stock={selectedStock}
+                    isWatching={watchedTickers.has(selectedStock.ticker)}
+                    onToggleWatch={() =>
+                      toggleWatch(selectedStock.ticker)
+                    }
+                  />
+                </section>
+  
+              </div>
+            </div>
+  
+            <MarketMoversSection />
+  
+          </main>
         </div>
       </div>
-
-      <MarketMoversSection />
-    </main>
+    </>
   );
 }
