@@ -10,7 +10,7 @@ import LearnHub from './components/pages/LearnHub.jsx'
 import Watchlist from './components/pages/Watchlist.jsx'
 import Privacy from './components/pages/Privacy.jsx'      
 import Terms from './components/pages/Terms.jsx'  
-import Markets from './components/pages/Markets';
+import Markets from './components/pages/Markets.jsx';
 
 import SignInModal from './components/auth/SignInModal.jsx'
 import SignUpModal from './components/auth/SignUpModal.jsx'
