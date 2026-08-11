@@ -1,5 +1,7 @@
 package com.finlingo.backend.auth;
 
+import com.finlingo.backend.auth.dto.LoginRequest;
+import com.finlingo.backend.auth.dto.RegisterRequest;
 import com.finlingo.backend.user.User;
 import com.finlingo.backend.user.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,45 +17,78 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthController(UserRepository userRepository,
+                          PasswordEncoder passwordEncoder,
+                          JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public Map<String, Object> register(@RequestBody Map<String, String> body) {
-        if (userRepository.findByEmail(body.get("email")).isPresent()) {
+    public Map<String, Object> register(@RequestBody RegisterRequest body) {
+        if (userRepository.findByEmail(body.getEmail()).isPresent()) {
             throw new RuntimeException("Email already registered");
         }
+
         User user = new User();
-        user.setEmail(body.get("email"));
-        user.setPasswordHash(passwordEncoder.encode(body.get("password")));
-        user.setDisplayName(body.getOrDefault("displayName", ""));
+        user.setDisplayName(body.getName());
+        user.setEmail(body.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(body.getPassword()));
+
+        String difficulty = body.getDifficulty();
+        if (difficulty == null || difficulty.isBlank()) {
+            difficulty = "beginner";
+        }
+        user.setDifficultyLevel(difficulty);
+        user.setProfilePicture(body.getProfilePicture());
+
         userRepository.save(user);
 
         String token = jwtUtil.generateToken(user.getEmail());
-        return Map.of("token", token, "email", user.getEmail(), "displayName", user.getDisplayName());
+
+        return Map.of(
+            "token", token,
+            "email", user.getEmail(),
+            "displayName", user.getDisplayName() != null ? user.getDisplayName() : "",
+            "difficultyLevel", user.getDifficultyLevel()
+        );
     }
 
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> body) {
-        User user = userRepository.findByEmail(body.get("email"))
+    public Map<String, Object> login(@RequestBody LoginRequest body) {
+        User user = userRepository.findByEmail(body.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        if (!passwordEncoder.matches(body.get("password"), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(body.getPassword(), user.getPasswordHash())) {
             throw new RuntimeException("Invalid email or password");
         }
+
         String token = jwtUtil.generateToken(user.getEmail());
-        return Map.of("token", token, "email", user.getEmail(), "displayName", user.getDisplayName());
+
+        return Map.of(
+            "token", token,
+            "email", user.getEmail(),
+            "displayName", user.getDisplayName() != null ? user.getDisplayName() : "",
+            "difficultyLevel", user.getDifficultyLevel() != null ? user.getDifficultyLevel() : "beginner"
+        );
     }
 
     @GetMapping("/me")
     public Map<String, Object> me(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Missing or invalid Authorization header");
+        }
+
         String token = authHeader.substring(7);
         String email = jwtUtil.extractEmail(token);
-        User user = userRepository.findByEmail(email).orElseThrow();
-        return Map.of("email", user.getEmail(), "displayName", user.getDisplayName(),
-                       "difficultyLevel", user.getDifficultyLevel());
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return Map.of(
+            "email", user.getEmail(),
+            "displayName", user.getDisplayName() != null ? user.getDisplayName() : "",
+            "difficultyLevel", user.getDifficultyLevel() != null ? user.getDifficultyLevel() : "beginner"
+        );
     }
 }
