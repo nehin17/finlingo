@@ -41,6 +41,9 @@ public class CompanyResearchDTO {
             BigDecimal price,
             BigDecimal change,
             boolean positive,
+            BigDecimal marketCapitalization,
+            BigDecimal pe,
+            BigDecimal revenueGrowth,
             BigDecimal open,
             BigDecimal high,
             BigDecimal low,
@@ -61,6 +64,9 @@ public class CompanyResearchDTO {
         this.low = low;
         this.volume = volume;
         this.chartData = chartData;
+        this.marketCapitalization = marketCapitalization;
+        this.pe = pe;
+        this.revenueGrowth = revenueGrowth;
     }
 
     public String getTicker() {
