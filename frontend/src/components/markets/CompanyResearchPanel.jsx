@@ -28,7 +28,10 @@ export default function CompanyResearchPanel({
 
         <PriceSection stock={stock} />
 
-        <StockPriceChart stock={stock} />
+        <StockPriceChart
+          stock={stock}
+          chartData={stock.chartData}
+        />
 
         <KeyMetricsGrid stock={stock} />
 

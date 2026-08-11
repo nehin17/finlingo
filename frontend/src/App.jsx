@@ -61,28 +61,109 @@ function AppRoutes() {
 
         const companies = await api.companies.getAll()
 
-        // Convert backend response into the shape expected by your Markets UI
-        const mapped = companies.map((company) => ({
-          ticker: company.ticker,
-          name: company.name,
-          shortName: company.name,
-          sector: company.sector || 'Unknown',
-          exchange: company.exchange || 'NASDAQ',
-          market: company.country === 'IN' ? 'Indian Market' : 'US Market',
+        const mapped = await Promise.all(
+          companies.map(async (company) => {
+            const research =
+              await api.companies.getByTicker(
+                company.ticker
+              )
 
-          // Placeholder values until real quote endpoint is added
-          price: 0,
-          change: 0,
-          marketCap: '—',
-          revenueGrowth: '—',
-          revenueGrowthRaw: 0,
-          pe: '—',
-          peRaw: Infinity,
+            const marketCap =
+              research.marketCapitalization != null
+                ? `${(
+                    research.marketCapitalization /
+                    1_000_000
+                  ).toFixed(1)}B`
+                : '—'
 
-          description: company.description,
-        }))
+            const revenueGrowth =
+              research.revenueGrowth != null
+                ? `${research.revenueGrowth}%`
+                : '—'
+
+            const pe =
+              research.pe != null
+                ? research.pe.toFixed(2)
+                : '—'
+
+            const chartPoints =
+              (research.chartData ?? []).map(
+                (point) => ({
+                  price: Number(point.value),
+                  timestamp: new Date(
+                    point.date
+                  ).getTime(),
+                })
+              )
+
+            return {
+              ticker: research.ticker,
+              name: research.name,
+              shortName: research.name,
+
+              sector:
+                research.sector || 'Unknown',
+
+              exchange:
+                research.exchange || 'NASDAQ',
+
+              market:
+                research.country === 'IN'
+                  ? 'Indian Market'
+                  : 'US Market',
+
+              price: Number(research.price) || 0,
+
+              change:
+                Number(research.change) || 0,
+
+              positive:
+                Boolean(research.positive),
+
+              marketCap,
+
+              revenueGrowth,
+
+              revenueGrowthRaw:
+                Number(research.revenueGrowth) || 0,
+
+              pe,
+
+              peRaw:
+                Number(research.pe) || Infinity,
+
+              open: research.open,
+              high: research.high,
+              low: research.low,
+              volume: research.volume,
+
+              chartData: {
+                '1D': chartPoints,
+                '1W': chartPoints,
+                '1M': chartPoints,
+                '3M': chartPoints,
+                '6M': chartPoints,
+                '1Y': chartPoints,
+                '5Y': chartPoints,
+              },
+
+              description:
+                research.description,
+
+              marketCapitalization:
+                research.marketCapitalization,
+
+              status: {
+                label: 'Market closed',
+                updated: 'Recently',
+                timezone: 'Local time',
+              },
+            }
+          })
+        )
 
         setStocks(mapped)
+
         setMarketsError(null)
       } catch (error) {
         console.error('Failed to load companies:', error)
