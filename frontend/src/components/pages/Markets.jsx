@@ -1,6 +1,6 @@
 
 // src/components/pages/Markets.jsx
-
+import { api } from '../../services/api.js'
 import { useMemo, useState } from 'react'
 
 import Sidebar from '../layout/Sidebar.jsx'
@@ -264,20 +264,30 @@ export default function Markets({
     }
   }
 
-  function toggleWatch(ticker) {
-    setWatchedTickers((current) => {
-      const next = new Set(current)
+  async function toggleWatch(ticker) {
+    try {
+      if (watchedTickers.has(ticker)) {
+        await api.watchlist.remove(ticker)
 
-      if (next.has(ticker)) {
-        next.delete(ticker)
+        setWatchedTickers((current) => {
+          const next = new Set(current)
+          next.delete(ticker)
+          return next
+        })
       } else {
-        next.add(ticker)
+        await api.watchlist.add(ticker)
+
+        setWatchedTickers((current) => {
+          const next = new Set(current)
+          next.add(ticker)
+          return next
+        })
       }
-
-      return next
-    })
+    } catch (error) {
+      console.error('FAILED WATCHLIST:', error)
+      alert(error.message)
+    }
   }
-
   return (
     <div
       className="min-h-screen transition-colors duration-300"
