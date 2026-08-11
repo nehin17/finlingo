@@ -52,4 +52,7 @@ public class PriceHistory {
     public String getSource() { return source; }
     public void setSource(String source) { this.source = source; }
     public LocalDateTime getFetchedAt() { return fetchedAt; }
+    public void setFetchedAt(LocalDateTime fetchedAt) {
+        this.fetchedAt = fetchedAt;
+    }
 }

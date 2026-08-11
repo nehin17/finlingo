@@ -1,6 +1,7 @@
 package com.finlingo.backend.company;
 
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -8,9 +9,14 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyRepository companyRepository;
+    private final CompanyResearchService companyResearchService;
 
-    public CompanyController(CompanyRepository companyRepository) {
+    public CompanyController(
+            CompanyRepository companyRepository,
+            CompanyResearchService companyResearchService
+    ) {
         this.companyRepository = companyRepository;
+        this.companyResearchService = companyResearchService;
     }
 
     @GetMapping
@@ -19,8 +25,9 @@ public class CompanyController {
     }
 
     @GetMapping("/{ticker}")
-    public Company getOne(@PathVariable String ticker) {
-        return companyRepository.findByTickerIgnoreCase(ticker)
-                .orElseThrow(() -> new RuntimeException("Company not found with ticker: " + ticker));
+    public CompanyResearchDTO getOne(
+            @PathVariable String ticker
+    ) {
+        return companyResearchService.getCompanyResearch(ticker);
     }
 }

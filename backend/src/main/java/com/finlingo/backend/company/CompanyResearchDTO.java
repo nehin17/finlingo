@@ -32,23 +32,24 @@ public class CompanyResearchDTO {
     }
 
     public CompanyResearchDTO(
-            String ticker,
-            String name,
-            String sector,
-            String description,
-            String exchange,
-            String country,
-            BigDecimal price,
-            BigDecimal change,
-            boolean positive,
-            BigDecimal marketCapitalization,
-            BigDecimal pe,
-            BigDecimal revenueGrowth,
-            BigDecimal open,
-            BigDecimal high,
-            BigDecimal low,
-            Long volume,
-            List<PricePointDTO> chartData
+        String ticker,
+        String name,
+        String sector,
+        String description,
+        String exchange,
+        String country,
+        String market,
+        BigDecimal price,
+        BigDecimal change,
+        boolean positive,
+        BigDecimal marketCapitalization,
+        BigDecimal pe,
+        BigDecimal revenueGrowth,
+        BigDecimal open,
+        BigDecimal high,
+        BigDecimal low,
+        Long volume,
+        List<PricePointDTO> chartData
     ) {
         this.ticker = ticker;
         this.name = name;
@@ -56,17 +57,18 @@ public class CompanyResearchDTO {
         this.description = description;
         this.exchange = exchange;
         this.country = country;
+        this.market = market;
         this.price = price;
         this.change = change;
         this.positive = positive;
+        this.marketCapitalization = marketCapitalization;
+        this.pe = pe;
+        this.revenueGrowth = revenueGrowth;
         this.open = open;
         this.high = high;
         this.low = low;
         this.volume = volume;
         this.chartData = chartData;
-        this.marketCapitalization = marketCapitalization;
-        this.pe = pe;
-        this.revenueGrowth = revenueGrowth;
     }
 
     public String getTicker() {
