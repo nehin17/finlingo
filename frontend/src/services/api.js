@@ -62,6 +62,12 @@ export const api = {
     getByTicker: (ticker) =>
       apiRequest(`/companies/${ticker}`),
 
+    search: (query) =>
+        apiRequest(`/companies/search?q=${encodeURIComponent(query)}`),
+
+    getResearchByTicker: (ticker) =>
+        apiRequest(`/companies/${ticker}/research`),
+
     ingest: (ticker) =>
       apiRequest(`/ingest/${ticker}`, {
         method: 'POST',
