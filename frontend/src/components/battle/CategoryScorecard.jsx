@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 
 const CATEGORIES = {
@@ -25,121 +25,342 @@ const CATEGORIES = {
   },
 }
 
-export default function CategoryScorecard({ leftCompany, rightCompany }) {
+export default function CategoryScorecard({
+  leftCompany,
+  rightCompany,
+}) {
   const [expanded, setExpanded] = useState(null)
 
-  const getCategoryScore = (company, category) => {
-    const categoryMetrics = CATEGORIES[category].metrics
-    const scores = categoryMetrics
-      .filter(m => company.metrics[m])
-      .map(m => company.metrics[m].score)
-    return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+  // ------------------------------------------------------------
+  // Safe score calculation
+  // Handles missing metrics from future API responses
+  // ------------------------------------------------------------
+  const getCategoryScore = (company, categoryKey) => {
+    const category = CATEGORIES[categoryKey]
+
+    if (!company?.metrics || !category) {
+      return 0
+    }
+
+    const scores = category.metrics
+      .map((metric) => company.metrics?.[metric]?.score)
+      .filter((score) => typeof score === 'number')
+
+    if (scores.length === 0) {
+      return 0
+    }
+
+    return Math.round(
+      scores.reduce((total, score) => total + score, 0) /
+        scores.length
+    )
   }
 
-  const getCategoryWinner = (category) => {
-    const leftScore = getCategoryScore(leftCompany, category)
-    const rightScore = getCategoryScore(rightCompany, category)
+  const getCategoryWinner = (categoryKey) => {
+    const leftScore = getCategoryScore(leftCompany, categoryKey)
+    const rightScore = getCategoryScore(rightCompany, categoryKey)
+
     if (leftScore > rightScore) return 'left'
     if (rightScore > leftScore) return 'right'
+
     return null
   }
 
   return (
-    <div className="mb-12">
-      <h3 className="text-2xl font-bold text-text-primary mb-6">Category Performance</h3>
-      
+    <div className="mb-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3
+            className="text-2xl font-bold"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            Category Performance
+          </h3>
+
+          <p
+            className="text-sm mt-1"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            Compare how each company performs across key
+            fundamental categories.
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {Object.entries(CATEGORIES).map(([key, category]) => {
-          const leftScore = getCategoryScore(leftCompany, key)
-          const rightScore = getCategoryScore(rightCompany, key)
-          const winner = getCategoryWinner(key)
+        {Object.entries(CATEGORIES).map(
+          ([key, category]) => {
+            const leftScore = getCategoryScore(
+              leftCompany,
+              key
+            )
 
-          return (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl border border-border p-5 cursor-pointer hover:border-border/80 transition-colors"
-              style={{ background: 'var(--surface)' }}
-              onClick={() => setExpanded(expanded === key ? null : key)}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-lg text-text-primary">{category.name}</h4>
-                <motion.div animate={{ rotate: expanded === key ? 180 : 0 }}>
-                  <ChevronDown size={20} className="text-text-muted" />
-                </motion.div>
-              </div>
-              
-              {/* Category Description */}
-              <p className="text-sm text-text-muted mb-4">{category.description}</p>
+            const rightScore = getCategoryScore(
+              rightCompany,
+              key
+            )
 
-              {/* Score bars */}
-              <div className="space-y-3">
-                <div>
-                  <p className="text-base text-text-muted mb-2 font-semibold">{leftCompany.ticker}</p>
-                  <div className="h-2 bg-surface-elevated rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${leftScore}%` }}
-                      transition={{ duration: 0.8 }}
-                      className="h-full rounded-full"
-                      style={{ background: leftCompany.color }}
-                    />
+            const winner = getCategoryWinner(key)
+
+            return (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-xl border p-5 cursor-pointer transition-all duration-200 hover:border-primary/20 hover:shadow-sm"
+                style={{
+                  background: 'var(--surface)',
+                  borderColor: 'var(--border)',
+                }}
+                onClick={() =>
+                  setExpanded(
+                    expanded === key ? null : key
+                  )
+                }
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <h4
+                      className="font-semibold text-lg"
+                      style={{
+                        color: 'var(--text-primary)',
+                      }}
+                    >
+                      {category.name}
+                    </h4>
+
+                    <p
+                      className="text-sm mt-1 leading-relaxed"
+                      style={{
+                        color: 'var(--text-muted)',
+                      }}
+                    >
+                      {category.description}
+                    </p>
                   </div>
-                </div>
-                <div>
-                  <p className="text-base text-text-muted mb-2 font-semibold">{rightCompany.ticker}</p>
-                  <div className="h-2 bg-surface-elevated rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${rightScore}%` }}
-                      transition={{ duration: 0.8 }}
-                      className="h-full rounded-full"
-                      style={{ background: rightCompany.color }}
+
+                  <motion.div
+                    animate={{
+                      rotate:
+                        expanded === key ? 180 : 0,
+                    }}
+                    transition={{ duration: 0.2 }}
+                    className="shrink-0 mt-1"
+                  >
+                    <ChevronDown
+                      size={18}
+                      style={{
+                        color: 'var(--text-muted)',
+                      }}
                     />
-                  </div>
+                  </motion.div>
                 </div>
-              </div>
 
-              {/* Winner indicator */}
-              <div className="mt-4 pt-4 border-t border-border/50 flex items-center justify-between text-base">
-                <span className="text-text-muted font-semibold">
-                  {winner ? `${winner === 'left' ? leftCompany.ticker : rightCompany.ticker} leads` : 'Tied'}
-                </span>
-                {winner && (
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ background: winner === 'left' ? leftCompany.color : rightCompany.color }}
-                  />
-                )}
-              </div>
+                {/* Scores */}
+                <div className="space-y-4">
+                  {/* Left company */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span
+                        className="text-sm font-medium"
+                        style={{
+                          color: 'var(--text-primary)',
+                        }}
+                      >
+                        {leftCompany?.ticker}
+                      </span>
 
-              {/* Expanded details */}
-              {expanded === key && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-4 pt-4 border-t border-border/50 space-y-3 text-base"
-                >
-                  {category.metrics.map(metric => (
-                    <div key={metric} className="flex justify-between">
-                      <span className="text-text-muted font-semibold">{metric}</span>
-                      <div className="space-x-6">
-                        <span className="font-semibold" style={{ color: leftCompany.color }}>
-                          {leftCompany.metrics[metric]?.value || 'N/A'}
-                        </span>
-                        <span className="font-semibold" style={{ color: rightCompany.color }}>
-                          {rightCompany.metrics[metric]?.value || 'N/A'}
-                        </span>
-                      </div>
+                      <span
+                        className="text-sm font-semibold"
+                        style={{
+                          color: leftCompany?.color,
+                        }}
+                      >
+                        {leftScore}
+                      </span>
                     </div>
-                  ))}
-                </motion.div>
-              )}
-            </motion.div>
-          )
-        })}
+
+                    <div
+                      className="h-2 rounded-full overflow-hidden"
+                      style={{
+                        background:
+                          'var(--surface-elevated)',
+                      }}
+                    >
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{
+                          width: `${leftScore}%`,
+                        }}
+                        transition={{
+                          duration: 0.8,
+                          ease: 'easeOut',
+                        }}
+                        className="h-full rounded-full"
+                        style={{
+                          background:
+                            leftCompany?.color,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right company */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span
+                        className="text-sm font-medium"
+                        style={{
+                          color: 'var(--text-primary)',
+                        }}
+                      >
+                        {rightCompany?.ticker}
+                      </span>
+
+                      <span
+                        className="text-sm font-semibold"
+                        style={{
+                          color: rightCompany?.color,
+                        }}
+                      >
+                        {rightScore}
+                      </span>
+                    </div>
+
+                    <div
+                      className="h-2 rounded-full overflow-hidden"
+                      style={{
+                        background:
+                          'var(--surface-elevated)',
+                      }}
+                    >
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{
+                          width: `${rightScore}%`,
+                        }}
+                        transition={{
+                          duration: 0.8,
+                          ease: 'easeOut',
+                        }}
+                        className="h-full rounded-full"
+                        style={{
+                          background:
+                            rightCompany?.color,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Winner */}
+                <div
+                  className="mt-4 pt-4 border-t flex items-center justify-between"
+                  style={{
+                    borderColor: 'var(--border)',
+                  }}
+                >
+                  <span
+                    className="text-sm font-medium"
+                    style={{
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    {winner
+                      ? `${winner === 'left'
+                          ? leftCompany?.ticker
+                          : rightCompany?.ticker} leads`
+                      : 'Tied'}
+                  </span>
+
+                  {winner && (
+                    <div
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{
+                        background:
+                          winner === 'left'
+                            ? leftCompany?.color
+                            : rightCompany?.color,
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* Expanded details */}
+                <AnimatePresence initial={false}>
+                  {expanded === key && (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        height: 0,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        height: 'auto',
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: 0,
+                      }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div
+                        className="mt-4 pt-4 border-t space-y-3"
+                        style={{
+                          borderColor: 'var(--border)',
+                        }}
+                      >
+                        {category.metrics.map(
+                          (metric) => (
+                            <div
+                              key={metric}
+                              className="grid grid-cols-[1fr_auto_auto] gap-4 items-center text-sm"
+                            >
+                              <span
+                                style={{
+                                  color: 'var(--text-muted)',
+                                }}
+                              >
+                                {metric}
+                              </span>
+
+                              <span
+                                className="font-medium text-right"
+                                style={{
+                                  color:
+                                    leftCompany?.color,
+                                }}
+                              >
+                                {leftCompany?.metrics?.[
+                                  metric
+                                ]?.value ?? 'N/A'}
+                              </span>
+
+                              <span
+                                className="font-medium text-right"
+                                style={{
+                                  color:
+                                    rightCompany?.color,
+                                }}
+                              >
+                                {rightCompany?.metrics?.[
+                                  metric
+                                ]?.value ?? 'N/A'}
+                              </span>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )
+          }
+        )}
       </div>
     </div>
   )

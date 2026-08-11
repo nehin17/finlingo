@@ -1,89 +1,160 @@
 import { motion } from 'framer-motion'
 
-export default function RiskComparison({ leftCompany, rightCompany }) {
-  const risks = [
-    'Valuation Risk',
-    'Growth Slowdown',
-    'Margin Pressure',
-    'Debt Risk',
-    'Concentration Risk'
-  ]
+const RISK_FACTORS = [
+  'Valuation Risk',
+  'Growth Slowdown',
+  'Margin Pressure',
+  'Debt Risk',
+  'Concentration Risk',
+]
 
-  const getRiskLevel = (ticker, risk) => {
-    const riskMap = {
-      'Valuation Risk': { NVDA: 'High', AAPL: 'Moderate', MSFT: 'Moderate' },
-      'Growth Slowdown': { NVDA: 'Moderate', AAPL: 'Moderate', MSFT: 'Moderate' },
-      'Margin Pressure': { NVDA: 'Moderate', AAPL: 'Moderate', MSFT: 'Moderate' },
-      'Debt Risk': { NVDA: 'Low', AAPL: 'Moderate', MSFT: 'Low' },
-      'Concentration Risk': { NVDA: 'Moderate', AAPL: 'Low', MSFT: 'Low' },
-    }
-    return riskMap[risk]?.[ticker] || 'Moderate'
+function getRiskLevel(company, risk) {
+  return company?.risks?.[risk] ?? 'Moderate'
+}
+
+function getRiskColor(level) {
+  switch (level) {
+    case 'High':
+      return '#EF4444'
+
+    case 'Moderate':
+      return '#F59E0B'
+
+    case 'Low':
+      return '#10B981'
+
+    default:
+      return '#64748B'
   }
+}
 
-  const getRiskColor = (level) => {
-    if (level === 'High') return '#EF4444'
-    if (level === 'Moderate') return '#F59E0B'
-    return '#10B981'
-  }
+function RiskBadge({ level }) {
+  const color = getRiskColor(level)
 
+  return (
+    <span
+      className="inline-flex items-center justify-center rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide"
+      style={{
+        background: `${color}20`,
+        color,
+        border: `1px solid ${color}33`,
+      }}
+    >
+      {level}
+    </span>
+  )
+}
+
+export default function RiskComparison({
+  leftCompany,
+  rightCompany,
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl p-8 mb-12 border border-border overflow-x-auto"
-      style={{ background: 'var(--surface)' }}
+      className="rounded-2xl p-8 mb-12 border overflow-hidden"
+      style={{
+        background: 'var(--surface)',
+        borderColor: 'var(--border)',
+      }}
     >
-      <h3 className="text-2xl font-bold text-text-primary mb-6">Key Risks</h3>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3
+            className="text-2xl font-bold"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            Key Risks
+          </h3>
 
-      <table className="w-full text-base">
-        <thead>
-          <tr className="border-b border-border" style={{ background: 'var(--surface-elevated)' }}>
-            <th className="text-left py-4 px-4 font-semibold text-lg text-text-primary">Risk Factor</th>
-            <th className="text-center py-4 px-4 font-semibold text-lg text-text-primary">{leftCompany?.ticker}</th>
-            <th className="text-center py-4 px-4 font-semibold text-lg text-text-primary">{rightCompany?.ticker}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {risks.map((risk, i) => {
-            const leftLevel = getRiskLevel(leftCompany?.ticker, risk)
-            const rightLevel = getRiskLevel(rightCompany?.ticker, risk)
+          <p
+            className="text-sm mt-1"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            A comparative view of major fundamental and business
+            risks.
+          </p>
+        </div>
+      </div>
 
-            return (
-              <motion.tr
-                key={risk}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: i * 0.05 }}
-                className="border-b border-border last:border-0 hover:bg-surface-elevated/20 transition-colors"
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px] text-sm">
+          <thead>
+            <tr
+              className="border-b"
+              style={{
+                background: 'var(--surface-elevated)',
+                borderColor: 'var(--border)',
+              }}
+            >
+              <th
+                className="text-left py-4 px-4 font-semibold"
+                style={{ color: 'var(--text-primary)' }}
               >
-                <td className="py-5 px-4 text-text-primary font-semibold">{risk}</td>
-                <td className="py-5 px-4 text-center">
-                  <span
-                    className="text-sm font-bold uppercase px-3 py-1.5 rounded-full inline-block"
-                    style={{
-                      background: `${getRiskColor(leftLevel)}20`,
-                      color: getRiskColor(leftLevel),
-                    }}
+                Risk Factor
+              </th>
+
+              <th
+                className="text-center py-4 px-4 font-semibold"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                {leftCompany?.ticker}
+              </th>
+
+              <th
+                className="text-center py-4 px-4 font-semibold"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                {rightCompany?.ticker}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {RISK_FACTORS.map((risk, index) => {
+              const leftLevel = getRiskLevel(
+                leftCompany,
+                risk
+              )
+
+              const rightLevel = getRiskLevel(
+                rightCompany,
+                risk
+              )
+
+              return (
+                <motion.tr
+                  key={risk}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{
+                    duration: 0.2,
+                    delay: index * 0.04,
+                  }}
+                  className="border-b last:border-b-0 transition-colors hover:bg-surface-elevated/20"
+                  style={{ borderColor: 'var(--border)' }}
+                >
+                  <td
+                    className="py-5 px-4 font-medium"
+                    style={{ color: 'var(--text-primary)' }}
                   >
-                    {leftLevel}
-                  </span>
-                </td>
-                <td className="py-5 px-4 text-center">
-                  <span
-                    className="text-sm font-bold uppercase px-3 py-1.5 rounded-full inline-block"
-                    style={{
-                      background: `${getRiskColor(rightLevel)}20`,
-                      color: getRiskColor(rightLevel),
-                    }}
-                  >
-                    {rightLevel}
-                  </span>
-                </td>
-              </motion.tr>
-            )
-          })}
-        </tbody>
-      </table>
+                    {risk}
+                  </td>
+
+                  <td className="py-5 px-4 text-center">
+                    <RiskBadge level={leftLevel} />
+                  </td>
+
+                  <td className="py-5 px-4 text-center">
+                    <RiskBadge level={rightLevel} />
+                  </td>
+                </motion.tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </motion.div>
   )
 }

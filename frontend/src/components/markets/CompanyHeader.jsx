@@ -5,24 +5,67 @@ export default function CompanyHeader({
   isWatching,
   onToggleWatch,
 }) {
+  if (!stock) return null;
+
+  const ticker = stock.ticker ?? '';
+  const logoUrl = stock.logoUrl ?? null;
+
+  const initials =
+    stock.initials ??
+    (ticker.slice(0, 2).toUpperCase() || '?');
+
   return (
     <header className="company-header">
-      <div className="company-header-identity">
-        <div className="company-title-row">
-          <CompanyLogo stock={stock} />
+      <div className="company-header-left">
+        <div className="company-logo">
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={`${stock.name ?? ticker} logo`}
+              onError={(event) => {
+                event.currentTarget.style.display = 'none';
 
-          <div>
-            <h1>{stock.name}</h1>
+                const fallback =
+                  event.currentTarget.nextElementSibling;
 
-            <div className="company-metadata">
-              <span className="company-ticker">
-                {stock.ticker}
-              </span>
-              <span aria-hidden="true">•</span>
-              <span>{stock.exchange}</span>
-              <span aria-hidden="true">•</span>
-              <span>{stock.sector}</span>
-            </div>
+                if (fallback) {
+                  fallback.style.display = 'flex';
+                }
+              }}
+            />
+          ) : null}
+
+          <span
+            className="company-logo-fallback"
+            style={{
+              display: logoUrl ? 'none' : 'flex',
+            }}
+          >
+            {initials}
+          </span>
+        </div>
+
+        <div>
+          <h1>{stock.name ?? ticker}</h1>
+
+          <div className="company-metadata">
+            <span className="company-ticker">
+              {ticker || 'N/A'}
+            </span>
+
+            {stock.exchange && (
+              <>
+                <span aria-hidden="true">•</span>
+                <span>{stock.exchange}</span>
+              </>
+            )}
+
+            {stock.sector && (
+              <>
+                <span aria-hidden="true">•</span>
+                <span>{stock.sector}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -36,8 +79,8 @@ export default function CompanyHeader({
         aria-pressed={isWatching}
         aria-label={
           isWatching
-            ? `Remove ${stock.name} from watchlist`
-            : `Add ${stock.name} to watchlist`
+            ? `Remove ${stock.name ?? ticker} from watchlist`
+            : `Add ${stock.name ?? ticker} to watchlist`
         }
       >
         <Star
@@ -45,35 +88,9 @@ export default function CompanyHeader({
           fill={isWatching ? 'currentColor' : 'none'}
           aria-hidden="true"
         />
+
         {isWatching ? 'Watching' : 'Watch'}
       </button>
     </header>
-  );
-}
-
-function CompanyLogo({ stock }) {
-  return (
-    <div className="company-header-logo">
-      {stock.logoUrl ? (
-        <img
-          src={stock.logoUrl}
-          alt=""
-          onError={(event) => {
-            event.currentTarget.style.display = 'none';
-            event.currentTarget.nextElementSibling.style.display =
-              'flex';
-          }}
-        />
-      ) : null}
-
-      <span
-        className="company-logo-fallback"
-        style={{
-          display: stock.logoUrl ? 'none' : 'flex',
-        }}
-      >
-        {stock.initials ?? stock.ticker.slice(0, 2)}
-      </span>
-    </div>
   );
 }

@@ -1,5 +1,5 @@
-//src/components/layout/Navbar.jsx
 
+// src/components/layout/Navbar.jsx
 
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
@@ -25,9 +25,24 @@ const navLinks = [
   { label: 'Learn', href: '/learn' },
 ]
 
-/* ────────────────────────────────────────────────────────────────
-   STREAK BUTTON
-──────────────────────────────────────────────────────────────── */
+// ============================================================
+// USER INITIALS
+// ============================================================
+
+function getInitials(name) {
+  if (!name) return 'U'
+
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('')
+}
+
+// ============================================================
+// STREAK BUTTON
+// ============================================================
 
 function StreakButton({
   isAuthenticated,
@@ -65,6 +80,7 @@ function StreakButton({
     }
 
     window.addEventListener('keydown', onKey)
+
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
@@ -72,10 +88,10 @@ function StreakButton({
     streak.currentStreak >= 30
       ? 'Elite consistency'
       : streak.currentStreak >= 10
-      ? "You're on fire"
-      : streak.currentStreak >= 5
-      ? "You're on a great run"
-      : 'Keep it going'
+        ? "You're on fire"
+        : streak.currentStreak >= 5
+          ? "You're on a great run"
+          : 'Keep it going'
 
   return (
     <div
@@ -84,8 +100,6 @@ function StreakButton({
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      {/* Trigger */}
-
       <button
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="true"
@@ -103,8 +117,6 @@ function StreakButton({
           border: 'none',
         }}
       >
-        {/* Circular streak ring */}
-
         <div
           className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200"
           style={{
@@ -118,8 +130,6 @@ function StreakButton({
           <Flame size={20} style={{ color: '#FB923C' }} />
         </div>
 
-        {/* Streak number */}
-
         {!compact && isAuthenticated && (
           <span
             className="text-sm font-bold whitespace-nowrap"
@@ -129,8 +139,6 @@ function StreakButton({
           </span>
         )}
       </button>
-
-      {/* Popover */}
 
       <AnimatePresence>
         {open && (
@@ -290,9 +298,9 @@ function StreakButton({
   )
 }
 
-/* ────────────────────────────────────────────────────────────────
-   NAVBAR
-──────────────────────────────────────────────────────────────── */
+// ============================================================
+// NAVBAR
+// ============================================================
 
 export default function Navbar({
   isAuthenticated,
@@ -330,8 +338,8 @@ export default function Navbar({
         ? 'rgba(11, 18, 32, 0.92)'
         : 'rgba(11, 18, 32, 0.78)'
       : scrolled
-      ? 'rgba(255, 255, 255, 0.92)'
-      : 'rgba(255, 255, 255, 0.78)'
+        ? 'rgba(255, 255, 255, 0.92)'
+        : 'rgba(255, 255, 255, 0.78)'
 
   return (
     <header
@@ -345,7 +353,7 @@ export default function Navbar({
           : 'none',
       }}
     >
-      <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex items-center justify-between h-full gap-4">
           {/* Logo */}
 
@@ -465,17 +473,30 @@ export default function Navbar({
                   }}
                 >
                   <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                    className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0"
                     style={{ background: 'rgba(37, 99, 235, 0.12)' }}
                   >
-                    <User size={18} style={{ color: 'var(--primary)' }} />
+                    {user?.profilePicture ? (
+                      <img
+                        src={user.profilePicture}
+                        alt={user.name || 'Profile'}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span
+                        className="text-sm font-bold leading-none select-none"
+                        style={{ color: 'var(--primary)' }}
+                      >
+                        {getInitials(user?.name)}
+                      </span>
+                    )}
                   </div>
 
                   <span
-                    className="text-base font-semibold"
+                    className="text-base font-semibold truncate max-w-[140px]"
                     style={{ color: 'var(--text)' }}
                   >
-                    {user?.name || 'Alex'}
+                    {user?.name || 'Account'}
                   </span>
 
                   <ChevronDown
@@ -491,20 +512,41 @@ export default function Navbar({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-full mt-3 w-56 rounded-2xl border py-2 z-[60]"
+                      className="absolute right-0 top-full mt-3 w-64 rounded-2xl border overflow-hidden z-[60]"
                       style={{
                         background: 'var(--surface)',
                         borderColor: 'var(--border)',
                         boxShadow: 'var(--shadow-md)',
                       }}
                     >
+                      <div
+                        className="p-4 border-b"
+                        style={{ borderColor: 'var(--border)' }}
+                      >
+                        <p
+                          className="text-sm font-semibold truncate"
+                          style={{ color: 'var(--text)' }}
+                        >
+                          {user?.name || 'Account'}
+                        </p>
+
+                        {user?.email && (
+                          <p
+                            className="text-xs truncate mt-1"
+                            style={{ color: 'var(--text-muted)' }}
+                          >
+                            {user.email}
+                          </p>
+                        )}
+                      </div>
+
                       <button
                         onClick={() => {
                           onSignOut()
                           setUserMenuOpen(false)
                         }}
-                        className="flex items-center gap-3 w-full px-5 py-3.5 text-base font-semibold transition-colors"
-                        style={{ color: 'var(--text-muted)' }}
+                        className="flex items-center gap-3 w-full px-5 py-3.5 text-sm font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+                        style={{ color: 'var(--error)' }}
                       >
                         <LogOut size={18} />
                         Sign out

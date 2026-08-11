@@ -5,7 +5,6 @@ import SectionHeader from '../shared/SectionHeader.jsx'
 
 const steps = [
   {
-    number: '01',
     icon: Search,
     title: 'Search any company',
     description:
@@ -14,7 +13,6 @@ const steps = [
     bg: 'rgba(37,99,235,0.10)',
   },
   {
-    number: '02',
     icon: Brain,
     title: 'Ask the AI assistant',
     description:
@@ -23,7 +21,6 @@ const steps = [
     bg: 'rgba(79,70,229,0.10)',
   },
   {
-    number: '03',
     icon: BarChart2,
     title: 'Compare before you invest',
     description:

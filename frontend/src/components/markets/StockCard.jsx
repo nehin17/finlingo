@@ -5,7 +5,8 @@ import {
 } from 'lucide-react';
 
 function formatPrice(price, exchange) {
-  const isIndian = exchange === 'NSE' || exchange === 'BSE';
+  const isIndian =
+    exchange === 'NSE' || exchange === 'BSE';
 
   return new Intl.NumberFormat(
     isIndian ? 'en-IN' : 'en-US',
@@ -30,7 +31,7 @@ export default function StockCard({
   }, [stock.ticker]);
 
   const positive = stock.change >= 0;
-  const showLogo = stock.logoUrl && !logoFailed;
+  const showLogo = Boolean(stock.logoUrl) && !logoFailed;
 
   return (
     <button
@@ -42,6 +43,8 @@ export default function StockCard({
       aria-pressed={isSelected}
     >
       <div className="stock-card-main">
+
+        {/* Company logo */}
         <div className="stock-card-logo">
           {showLogo ? (
             <img
@@ -51,19 +54,27 @@ export default function StockCard({
             />
           ) : (
             <span>
-              {stock.initials ?? stock.ticker.slice(0, 2)}
+              {stock.initials ??
+                stock.ticker?.slice(0, 2).toUpperCase()}
             </span>
           )}
         </div>
 
+        {/* Company identity */}
         <div className="stock-card-identity">
           <strong>{stock.ticker}</strong>
-          <span>{stock.shortName ?? stock.name}</span>
+          <span>
+            {stock.shortName ?? stock.name}
+          </span>
         </div>
 
+        {/* Price */}
         <div className="stock-card-price">
           <strong>
-            {formatPrice(stock.price, stock.exchange)}
+            {formatPrice(
+              stock.price,
+              stock.exchange
+            )}
           </strong>
 
           <span
@@ -74,9 +85,15 @@ export default function StockCard({
             }
           >
             {positive ? (
-              <ArrowUpRight size={13} aria-hidden="true" />
+              <ArrowUpRight
+                size={13}
+                aria-hidden="true"
+              />
             ) : (
-              <ArrowDownRight size={13} aria-hidden="true" />
+              <ArrowDownRight
+                size={13}
+                aria-hidden="true"
+              />
             )}
 
             {positive ? '+' : ''}
@@ -85,9 +102,15 @@ export default function StockCard({
         </div>
       </div>
 
+      {/* Additional information */}
       <div className="stock-card-footer">
-        <span>{stock.sector}</span>
-        <span>Market Cap: {stock.marketCap}</span>
+        <span>
+          {stock.sector ?? '—'}
+        </span>
+
+        <span>
+          Market Cap: {stock.marketCap ?? '—'}
+        </span>
       </div>
     </button>
   );

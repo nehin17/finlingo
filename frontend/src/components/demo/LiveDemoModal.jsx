@@ -1,7 +1,7 @@
 
 // src/components/demo/LiveDemoModal.jsx
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Pause, Play, RotateCcw } from 'lucide-react'
 
@@ -28,60 +28,86 @@ const StepComponents = {
 export default function LiveDemoModal({ open, onClose }) {
   const [step, setStep] = useState(0)
   const [paused, setPaused] = useState(false)
-  const [elapsed, setElapsed] = useState(0)
 
+  // Time spent inside the current step
+  const [stepElapsed, setStepElapsed] = useState(0)
+
+  // Reset helper
   const reset = useCallback(() => {
     setStep(0)
-    setElapsed(0)
+    setStepElapsed(0)
     setPaused(false)
   }, [])
 
-  // Auto-advance between steps
+  // Total progress (memoized)
+  const elapsed = useMemo(() => {
+    const previous = stepDurations
+      .slice(0, step)
+      .reduce((a, b) => a + b, 0)
+
+    return previous + stepElapsed
+  }, [step, stepElapsed])
+
+  const progress = Math.min((elapsed / TOTAL) * 100, 100)
+
+  // Reset current-step timer whenever the step changes
   useEffect(() => {
-    if (!open || paused) return
-    if (step >= steps.length - 1) return
-
-    const timer = setTimeout(() => {
-      setStep((s) => s + 1)
-    }, stepDurations[step])
-
-    return () => clearTimeout(timer)
-  }, [open, step, paused])
-
-  // Animate progress bar
-  useEffect(() => {
-    if (!open || paused) return
-
-    const interval = setInterval(() => {
-      setElapsed((e) => Math.min(e + 100, TOTAL))
-    }, 100)
-
-    return () => clearInterval(interval)
-  }, [open, paused])
-
-  // Sync progress bar when step changes manually
-  useEffect(() => {
-    let totalBefore = 0
-
-    for (let i = 0; i < step; i++) {
-      totalBefore += stepDurations[i]
-    }
-
-    setElapsed(totalBefore)
+    setStepElapsed(0)
   }, [step])
 
-  // Reset when modal closes
+  // Progress timer
+  useEffect(() => {
+    if (!open || paused) return
+
+    const interval = window.setInterval(() => {
+      setStepElapsed((current) => {
+        const duration = stepDurations[step]
+
+        // Auto-advance when the step is complete
+        if (current + 100 >= duration) {
+          if (step < steps.length - 1) {
+            setStep((s) => s + 1)
+          }
+
+          return 0
+        }
+
+        return current + 100
+      })
+    }, 100)
+
+    return () => window.clearInterval(interval)
+  }, [open, paused, step])
+
+  // Close with Escape
+  useEffect(() => {
+    if (!open) return
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [open, onClose])
+
+  // Reset when the modal fully closes
   useEffect(() => {
     if (!open) {
-      const timeout = setTimeout(reset, 300)
-      return () => clearTimeout(timeout)
+      const timeout = window.setTimeout(reset, 300)
+
+      return () => window.clearTimeout(timeout)
     }
   }, [open, reset])
 
   if (!open) return null
 
   const CurrentStep = StepComponents[steps[step]]
-  const progress = (elapsed / TOTAL) * 100
 
   return (
     <AnimatePresence>
@@ -96,9 +122,9 @@ export default function LiveDemoModal({ open, onClose }) {
             background: 'rgba(2, 6, 23, 0.82)',
             backdropFilter: 'blur(14px)',
           }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              onClose()
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              onClose?.()
             }
           }}
         >
@@ -124,18 +150,20 @@ export default function LiveDemoModal({ open, onClose }) {
             >
               {/* Step Indicators */}
               <div className="flex items-center gap-2">
-                {steps.map((s, i) => (
+                {steps.map((stepName, index) => (
                   <button
-                    key={s}
-                    onClick={() => setStep(i)}
+                    key={stepName}
+                    type="button"
+                    onClick={() => setStep(index)}
+                    aria-label={`Go to ${stepName} step`}
                     className="transition-all duration-300 rounded-full"
                     style={{
-                      width: i === step ? 24 : 8,
+                      width: index === step ? 24 : 8,
                       height: 8,
                       background:
-                        i === step
+                        index === step
                           ? 'linear-gradient(135deg, #2563EB, #4F46E5)'
-                          : i < step
+                          : index < step
                           ? 'rgba(37,99,235,0.5)'
                           : 'rgba(255,255,255,0.15)',
                     }}
@@ -146,6 +174,7 @@ export default function LiveDemoModal({ open, onClose }) {
               {/* Controls */}
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={() => setPaused((p) => !p)}
                   className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 text-slate-400 hover:text-white hover:bg-white/10"
                   style={{ background: 'rgba(255,255,255,0.06)' }}
@@ -155,6 +184,7 @@ export default function LiveDemoModal({ open, onClose }) {
                 </button>
 
                 <button
+                  type="button"
                   onClick={reset}
                   className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 text-slate-400 hover:text-white hover:bg-white/10"
                   style={{ background: 'rgba(255,255,255,0.06)' }}
@@ -164,6 +194,7 @@ export default function LiveDemoModal({ open, onClose }) {
                 </button>
 
                 <button
+                  type="button"
                   onClick={onClose}
                   className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 text-slate-400 hover:text-white hover:bg-white/10"
                   style={{ background: 'rgba(255,255,255,0.06)' }}
@@ -191,7 +222,9 @@ export default function LiveDemoModal({ open, onClose }) {
                   <CurrentStep
                     paused={paused}
                     onNext={() =>
-                      setStep((s) => Math.min(s + 1, steps.length - 1))
+                      setStep((current) =>
+                        Math.min(current + 1, steps.length - 1)
+                      )
                     }
                     onReplay={reset}
                     onClose={onClose}
@@ -209,7 +242,8 @@ export default function LiveDemoModal({ open, onClose }) {
                 className="h-full"
                 style={{
                   width: `${progress}%`,
-                  background: 'linear-gradient(90deg, #2563EB, #4F46E5)',
+                  background:
+                    'linear-gradient(90deg, #2563EB, #4F46E5)',
                 }}
                 transition={{ duration: 0.1, ease: 'linear' }}
               />

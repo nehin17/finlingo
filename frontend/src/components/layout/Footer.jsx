@@ -9,12 +9,12 @@ const footerLinks = {
     { label: 'Research', href: '/dashboard' },
     { label: 'Battle Mode', href: '/battle' },
     { label: 'Learn', href: '/learn' },
-    { label: 'Markets', href: '/watchlist' },
+    { label: 'Markets', href: '/markets' },
   ],
 
   Company: [
-    { label: 'About', href: '#' },
-    { label: 'Privacy', href: '/privacy' },
+    { label: 'About', href: '/' },
+    { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms', href: '/terms' },
   ],
 }

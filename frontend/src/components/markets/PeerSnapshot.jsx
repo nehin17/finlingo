@@ -1,139 +1,250 @@
+
 // src/components/markets/sections/PeerSnapshot.jsx
 import { BarChart3 } from 'lucide-react';
 
-export default function PeerSnapshot({ peers }) {
+export default function PeerSnapshot({ peers = [] }) {
   return (
-    <div style={{
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      borderRadius: '18px',
-      overflow: 'hidden',
-    }}>
+    <section
+      style={{
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        borderRadius: '18px',
+        overflow: 'hidden',
+      }}
+    >
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '18px 22px 14px',
-        borderBottom: '1px solid var(--border)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
-          <BarChart3 size={15} strokeWidth={2} style={{ color: 'var(--text-muted)' }} />
-          <span style={{
-            fontSize: '14px',
-            fontWeight: '700',
-            color: 'var(--text)',
-          }}>
-            Quick Peer Snapshot
-          </span>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '16px',
+          padding: '18px 22px 14px',
+          borderBottom: '1px solid var(--border)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '9px',
+            minWidth: 0,
+          }}
+        >
+          <BarChart3
+            size={15}
+            strokeWidth={2}
+            style={{
+              color: 'var(--text-muted)',
+              flexShrink: 0,
+            }}
+          />
+
+          <div>
+            <div
+              style={{
+                fontSize: '14px',
+                fontWeight: '700',
+                color: 'var(--text)',
+              }}
+            >
+              Quick Peer Snapshot
+            </div>
+
+            <div
+              style={{
+                marginTop: '3px',
+                fontSize: '11px',
+                color: 'var(--text-muted)',
+                fontStyle: 'italic',
+              }}
+            >
+              Is this company expensive vs peers?
+            </div>
+          </div>
         </div>
-        <span style={{
-          fontSize: '11px',
-          color: 'var(--text-muted)',
-          fontStyle: 'italic',
-        }}>
-          Is this company expensive vs peers?
-        </span>
       </div>
 
       {/* Table */}
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          minWidth: '320px',
-        }}>
-          <thead>
-            <tr style={{ background: 'var(--surface-hover)' }}>
-              {['Company', 'Ticker', 'P/E Ratio', 'Revenue Growth'].map(h => (
-                <th key={h} style={{
-                  padding: '10px 22px',
-                  textAlign: h === 'Company' || h === 'Ticker' ? 'left' : 'right',
-                  fontSize: '10.5px',
-                  fontWeight: '700',
-                  color: 'var(--text-muted)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.07em',
-                  borderBottom: '1px solid var(--border)',
-                  whiteSpace: 'nowrap',
-                }}>
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {peers.map((row, i) => (
+      {peers.length > 0 ? (
+        <div style={{ overflowX: 'auto' }}>
+          <table
+            style={{
+              width: '100%',
+              minWidth: '520px',
+              borderCollapse: 'collapse',
+            }}
+          >
+            <thead>
               <tr
-                key={row.ticker}
                 style={{
-                  background: row.isSelf
-                    ? 'color-mix(in srgb, var(--primary) 6%, transparent)'
-                    : 'transparent',
-                  borderBottom: i < peers.length - 1
-                    ? '1px solid var(--border)'
-                    : 'none',
-                  transition: 'background 0.15s ease',
+                  background: 'var(--surface-hover)',
                 }}
               >
-                <td style={{
-                  padding: '14px 22px',
-                  fontSize: '13px',
-                  fontWeight: row.isSelf ? '700' : '500',
-                  color: row.isSelf ? 'var(--primary)' : 'var(--text)',
-                  whiteSpace: 'nowrap',
-                }}>
-                  {row.company}
-                  {row.isSelf && (
-                    <span style={{
-                      marginLeft: '7px',
-                      fontSize: '9.5px',
+                {[
+                  'Company',
+                  'Ticker',
+                  'P/E Ratio',
+                  'Revenue Growth',
+                ].map((heading) => (
+                  <th
+                    key={heading}
+                    style={{
+                      padding: '10px 22px',
+                      textAlign:
+                        heading === 'Company' || heading === 'Ticker'
+                          ? 'left'
+                          : 'right',
+                      fontSize: '10.5px',
                       fontWeight: '700',
-                      color: 'var(--primary)',
-                      background: 'color-mix(in srgb, var(--primary) 14%, transparent)',
-                      borderRadius: '4px',
-                      padding: '1px 6px',
-                      letterSpacing: '0.04em',
-                      verticalAlign: 'middle',
-                    }}>
-                      YOU
-                    </span>
-                  )}
-                </td>
-                <td style={{
-                  padding: '14px 22px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: 'var(--text-muted)',
-                  fontFamily: 'monospace',
-                }}>
-                  {row.ticker}
-                </td>
-                <td style={{
-                  padding: '14px 22px',
-                  textAlign: 'right',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: 'var(--text)',
-                  fontVariantNumeric: 'tabular-nums',
-                }}>
-                  {row.pe}
-                </td>
-                <td style={{
-                  padding: '14px 22px',
-                  textAlign: 'right',
-                  fontSize: '13px',
-                  fontWeight: '700',
-                  color: 'var(--success)',
-                  fontVariantNumeric: 'tabular-nums',
-                }}>
-                  {row.revenueGrowth}
-                </td>
+                      color: 'var(--text-muted)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.07em',
+                      borderBottom: '1px solid var(--border)',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {heading}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            </thead>
+
+            <tbody>
+              {peers.map((row, index) => {
+                const growth =
+                  typeof row.revenueGrowth === 'string'
+                    ? parseFloat(row.revenueGrowth)
+                    : row.revenueGrowth;
+
+                const growthPositive = Number.isFinite(growth)
+                  ? growth >= 0
+                  : true;
+
+                return (
+                  <tr
+                    key={row.ticker}
+                    style={{
+                      background: row.isSelf
+                        ? 'color-mix(in srgb, var(--primary) 6%, transparent)'
+                        : 'transparent',
+                    }}
+                  >
+                    {/* Company */}
+                    <td
+                      style={{
+                        padding: '14px 22px',
+                        fontSize: '13px',
+                        fontWeight: row.isSelf ? '700' : '500',
+                        color: row.isSelf
+                          ? 'var(--primary)'
+                          : 'var(--text)',
+                        borderBottom:
+                          index < peers.length - 1
+                            ? '1px solid var(--border)'
+                            : 'none',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {row.company}
+
+                      {row.isSelf && (
+                        <span
+                          style={{
+                            marginLeft: '7px',
+                            padding: '1px 6px',
+                            color: 'var(--primary)',
+                            background:
+                              'color-mix(in srgb, var(--primary) 14%, transparent)',
+                            borderRadius: '4px',
+                            fontSize: '9.5px',
+                            fontWeight: '700',
+                            letterSpacing: '0.04em',
+                            verticalAlign: 'middle',
+                          }}
+                        >
+                          YOU
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Ticker */}
+                    <td
+                      style={{
+                        padding: '14px 22px',
+                        color: 'var(--text-muted)',
+                        fontFamily: 'monospace',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        borderBottom:
+                          index < peers.length - 1
+                            ? '1px solid var(--border)'
+                            : 'none',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {row.ticker}
+                    </td>
+
+                    {/* P/E */}
+                    <td
+                      style={{
+                        padding: '14px 22px',
+                        color: 'var(--text)',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        textAlign: 'right',
+                        fontVariantNumeric: 'tabular-nums',
+                        borderBottom:
+                          index < peers.length - 1
+                            ? '1px solid var(--border)'
+                            : 'none',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {row.pe}
+                    </td>
+
+                    {/* Revenue Growth */}
+                    <td
+                      style={{
+                        padding: '14px 22px',
+                        color: growthPositive
+                          ? 'var(--success)'
+                          : 'var(--danger)',
+                        fontSize: '13px',
+                        fontWeight: '700',
+                        textAlign: 'right',
+                        fontVariantNumeric: 'tabular-nums',
+                        borderBottom:
+                          index < peers.length - 1
+                            ? '1px solid var(--border)'
+                            : 'none',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {growthPositive ? '+' : ''}
+                      {row.revenueGrowth}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div
+          style={{
+            padding: '28px 22px',
+            color: 'var(--text-muted)',
+            fontSize: '12px',
+            textAlign: 'center',
+          }}
+        >
+          No peer comparison data available.
+        </div>
+      )}
+    </section>
   );
 }
+

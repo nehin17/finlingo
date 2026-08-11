@@ -1,7 +1,6 @@
 // src/components/home/MarketPulseGrid.jsx
 import { motion } from 'framer-motion'
 import { TrendingUp, TrendingDown, Zap, Eye, Star, Brain } from 'lucide-react'
-import SectionHeader from '../shared/SectionHeader.jsx'
 
 const pulseCards = [
   {

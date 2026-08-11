@@ -8,10 +8,8 @@ import {
   ShieldCheck,
   BarChart2,
   Sparkles,
-  ChevronRight,
   Play,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
 import SearchBar from '../shared/SearchBar.jsx'
 import Button from '../shared/Button.jsx'
@@ -282,7 +280,7 @@ export default function HeroSection({ onSignUpClick }) {
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-[72px]">
+      <section className="relative overflow-hidden min-h-screen flex items-center">
         {/* Background */}
         <div
           className="absolute inset-0 transition-colors duration-300"
