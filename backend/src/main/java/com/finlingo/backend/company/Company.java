@@ -1,6 +1,8 @@
 package com.finlingo.backend.company;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,6 +33,14 @@ public class Company {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(precision = 19, scale = 4)
+    private BigDecimal marketCapitalization;
+
+    @Column(precision = 19, scale = 4)
+    private BigDecimal peRatio;
+
+    @Column(precision = 19, scale = 4)
+    private BigDecimal revenueGrowth;
 
     @PreUpdate
     public void setLastUpdate() {
@@ -51,4 +61,26 @@ public class Company {
     public void setCountry(String country) { this.country = country; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public BigDecimal getMarketCapitalization() {
+        return marketCapitalization;
+    }
+
+    public BigDecimal getPeRatio() {
+        return peRatio;
+    }
+
+    public BigDecimal getRevenueGrowth() {
+        return revenueGrowth;
+    }
+    public void setMarketCapitalization(BigDecimal marketCapitalization) {
+        this.marketCapitalization = marketCapitalization;
+    }
+
+    public void setPeRatio(BigDecimal peRatio) {
+        this.peRatio = peRatio;
+    }
+
+    public void setRevenueGrowth(BigDecimal revenueGrowth) {
+        this.revenueGrowth = revenueGrowth;
+    }
 }
