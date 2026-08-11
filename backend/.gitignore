@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+.env
+.env.*
+!.env.example
+# Local Spring configuration
+application-local.properties
+
+# Database backups
+*.dump
+*.sql

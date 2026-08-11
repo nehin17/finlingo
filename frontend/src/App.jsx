@@ -69,12 +69,12 @@ function AppRoutes() {
               )
 
             const marketCap =
-              research.marketCapitalization != null
-                ? `${(
-                    research.marketCapitalization /
-                    1_000_000
-                  ).toFixed(1)}B`
-                : '—'
+            research.marketCapitalization != null
+              ? `${(
+                  research.marketCapitalization /
+                  1000
+                ).toFixed(2)}T`
+              : '—'
 
             const revenueGrowth =
               research.revenueGrowth != null

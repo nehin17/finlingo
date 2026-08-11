@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { api } from '../../services/api.js'
 import {
   Star,
   TrendingUp,
@@ -546,9 +547,7 @@ export default function Watchlist({
 }) {
   const navigate = useNavigate()
 
-  const [watchlist, setWatchlist] = useState(
-    () => demoWatchlist.map(normalizeStock)
-  )
+  const [watchlist, setWatchlist] = useState([])
 
   const [showAdd, setShowAdd] = useState(false)
   const [mobileSidebarOpen, setMobileSidebarOpen] =
@@ -567,23 +566,11 @@ export default function Watchlist({
   // ─────────────────────────────────────────────────────────
 
   const loadWatchlist = useCallback(async () => {
-    if (!watchlistApi?.getWatchlist) {
-      setLoading(false)
-      return
-    }
-
     setLoading(true)
     setError('')
 
     try {
-      const result =
-        await watchlistApi.getWatchlist({
-          user,
-        })
-
-      const items = Array.isArray(result)
-        ? result
-        : result?.watchlist || []
+      const items = await api.watchlist.getAll()
 
       setWatchlist(items.map(normalizeStock))
     } catch (err) {
@@ -599,11 +586,7 @@ export default function Watchlist({
     } finally {
       setLoading(false)
     }
-  }, [watchlistApi, user])
-
-  useEffect(() => {
-    loadWatchlist()
-  }, [loadWatchlist])
+  }, [])
 
   // ─────────────────────────────────────────────────────────
   // DERIVED VALUES

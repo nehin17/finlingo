@@ -4,6 +4,7 @@ import com.finlingo.backend.company.Company;
 import com.finlingo.backend.company.CompanyRepository;
 import com.finlingo.backend.user.User;
 import com.finlingo.backend.user.UserRepository;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,38 +18,112 @@ public class WatchlistController {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
 
-    public WatchlistController(WatchlistRepository watchlistRepository, UserRepository userRepository, CompanyRepository companyRepository) {
+    public WatchlistController(
+            WatchlistRepository watchlistRepository,
+            UserRepository userRepository,
+            CompanyRepository companyRepository
+    ) {
         this.watchlistRepository = watchlistRepository;
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
     }
 
     private User currentUser(Authentication auth) {
+
         String email = auth.getName();
-        return userRepository.findByEmail(email).orElseThrow();
+
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found")
+                );
     }
 
     @GetMapping
-    public List<Watchlist> getWatchlist(Authentication auth) {
+    public List<WatchlistDTO> getWatchlist(
+            Authentication auth
+    ) {
+
         User user = currentUser(auth);
-        return watchlistRepository.findByUserId(user.getId());
+
+        return watchlistRepository
+                .findByUserId(user.getId())
+                .stream()
+                .map(item ->
+                        new WatchlistDTO(
+                                item.getCompany().getTicker(),
+                                item.getCompany().getName(),
+                                item.getAddedAt()
+                        )
+                )
+                .toList();
     }
 
     @PostMapping("/{ticker}")
-    public Watchlist addToWatchlist(@PathVariable String ticker, Authentication auth) {
-        User user = currentUser(auth);
-        Company company = companyRepository.findById(ticker.toUpperCase()).orElseThrow();
+    public WatchlistDTO addToWatchlist(
+            @PathVariable String ticker,
+            Authentication auth
+    ) {
 
-        Watchlist watchlist = new Watchlist();
+        User user = currentUser(auth);
+
+        String symbol = ticker.toUpperCase();
+
+        Company company =
+                companyRepository
+                        .findById(symbol)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Company not found: " + symbol
+                                )
+                        );
+
+        Watchlist existing =
+                watchlistRepository
+                        .findByUserIdAndCompanyTicker(
+                                user.getId(),
+                                symbol
+                        )
+                        .orElse(null);
+
+        if (existing != null) {
+
+            return new WatchlistDTO(
+                    existing.getCompany().getTicker(),
+                    existing.getCompany().getName(),
+                    existing.getAddedAt()
+            );
+        }
+
+        Watchlist watchlist =
+                new Watchlist();
+
         watchlist.setUser(user);
         watchlist.setCompany(company);
-        return watchlistRepository.save(watchlist);
+
+        Watchlist saved =
+                watchlistRepository.save(watchlist);
+
+        return new WatchlistDTO(
+                saved.getCompany().getTicker(),
+                saved.getCompany().getName(),
+                saved.getAddedAt()
+        );
     }
 
     @DeleteMapping("/{ticker}")
     @org.springframework.transaction.annotation.Transactional
-    public void removeFromWatchlist(@PathVariable String ticker, Authentication auth) {
+    public void removeFromWatchlist(
+            @PathVariable String ticker,
+            Authentication auth
+    ) {
+
         User user = currentUser(auth);
-        watchlistRepository.deleteByUserIdAndCompanyTicker(user.getId(), ticker.toUpperCase());
+
+        watchlistRepository
+                .deleteByUserIdAndCompanyTicker(
+                        user.getId(),
+                        ticker.toUpperCase()
+                );
     }
 }

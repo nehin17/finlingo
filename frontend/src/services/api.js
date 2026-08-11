@@ -73,7 +73,19 @@ export const api = {
         method: 'POST',
       }),
   },
+  watchlist: {
+    getAll: () => apiRequest('/watchlist'),
 
+    add: (ticker) =>
+      apiRequest(`/watchlist/${ticker}`, {
+        method: 'POST',
+      }),
+
+    remove: (ticker) =>
+      apiRequest(`/watchlist/${ticker}`, {
+        method: 'DELETE',
+      }),
+  },
   terms: {
     getAll: () => apiRequest('/terms'),
 
