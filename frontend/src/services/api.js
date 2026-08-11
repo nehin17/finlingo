@@ -1,0 +1,75 @@
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+
+const getAuthToken = () =>
+  localStorage.getItem('finlingo_token')
+
+async function apiRequest(endpoint, options = {}) {
+  const token = getAuthToken()
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  }
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  })
+
+  if (!response.ok) {
+    let message = 'Something went wrong'
+
+    try {
+      const error = await response.json()
+      message = error.message || message
+    } catch {}
+
+    throw new Error(message)
+  }
+
+  if (response.status === 204) return null
+
+  return response.json()
+}
+
+export const api = {
+  auth: {
+    register: (userData) =>
+      apiRequest('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(userData),
+      }),
+
+    login: (credentials) =>
+      apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(credentials),
+      }),
+
+    getMe: () => apiRequest('/auth/me'),
+  },
+
+  companies: {
+    getAll: () => apiRequest('/companies'),
+
+    getByTicker: (ticker) =>
+      apiRequest(`/companies/${ticker}`),
+
+    ingest: (ticker) =>
+      apiRequest(`/ingest/${ticker}`, {
+        method: 'POST',
+      }),
+  },
+
+  terms: {
+    getAll: () => apiRequest('/terms'),
+
+    getByTerm: (term) =>
+      apiRequest(`/terms/${term}`),
+  },
+}

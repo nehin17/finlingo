@@ -1,9 +1,7 @@
-
-// src/App.jsx
-
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from './context/AuthContext.jsx'
+import { api } from './services/api.js'
 
 import Home from './components/pages/Home.jsx'
 import Dashboard from './components/pages/Dashboard.jsx'
@@ -21,22 +19,8 @@ import SignUpModal from './components/auth/SignUpModal.jsx'
 import CaseStudyDetailPage from './components/learn/CaseStudyDetail.jsx'
 import FloatingAIAssistant from './components/ai/FloatingAIAssistant.jsx'
 
-// ============================================================
-// APP ROUTES
-// ============================================================
-//
-// This component lives inside:
-// BrowserRouter → AuthProvider → AppRoutes
-//
-// AuthContext is the SINGLE source of truth for authentication.
-// ============================================================
-
 function AppRoutes() {
   const navigate = useNavigate()
-
-  // ==========================================================
-  // AUTHENTICATION
-  // ==========================================================
 
   const {
     user,
@@ -45,41 +29,75 @@ function AppRoutes() {
     logout,
   } = useAuth()
 
-  // ==========================================================
-  // UI STATE
-  // ==========================================================
-
   const [showSignIn, setShowSignIn] = useState(false)
   const [showSignUp, setShowSignUp] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
-  // ==========================================================
+  // =========================================================
   // THEME
-  // ==========================================================
+  // =========================================================
 
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem('theme') || 'light'
+  const [theme, setTheme] = useState(() =>
+    localStorage.getItem('theme') || 'light'
   )
 
   useEffect(() => {
-    document.documentElement.classList.toggle(
-      'dark',
-      theme === 'dark'
-    )
-
+    document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  // ==========================================================
-  // AUTH SUCCESS HANDLERS
-  // ==========================================================
-  //
-  // SignInModal and SignUpModal already communicate with
-  // AuthContext.
-  //
-  // These callbacks ONLY handle UI after authentication
-  // succeeds.
-  // ==========================================================
+  // =========================================================
+  // MARKETS DATA FROM BACKEND
+  // =========================================================
+
+  const [stocks, setStocks] = useState([])
+  const [marketsLoading, setMarketsLoading] = useState(true)
+  const [marketsError, setMarketsError] = useState(null)
+
+  useEffect(() => {
+    async function loadCompanies() {
+      try {
+        setMarketsLoading(true)
+
+        const companies = await api.companies.getAll()
+
+        // Convert backend response into the shape expected by your Markets UI
+        const mapped = companies.map((company) => ({
+          ticker: company.ticker,
+          name: company.name,
+          shortName: company.name,
+          sector: company.sector || 'Unknown',
+          exchange: company.exchange || 'NASDAQ',
+          market: company.country === 'IN' ? 'Indian Market' : 'US Market',
+
+          // Placeholder values until real quote endpoint is added
+          price: 0,
+          change: 0,
+          marketCap: '—',
+          revenueGrowth: '—',
+          revenueGrowthRaw: 0,
+          pe: '—',
+          peRaw: Infinity,
+
+          description: company.description,
+        }))
+
+        setStocks(mapped)
+        setMarketsError(null)
+      } catch (error) {
+        console.error('Failed to load companies:', error)
+        setMarketsError(error.message || 'Failed to load market data')
+      } finally {
+        setMarketsLoading(false)
+      }
+    }
+
+    loadCompanies()
+  }, [])
+
+  // =========================================================
+  // AUTH HANDLERS
+  // =========================================================
 
   const handleSignInSuccess = () => {
     setShowSignIn(false)
@@ -88,10 +106,6 @@ function AppRoutes() {
   const handleSignUpSuccess = () => {
     setShowSignUp(false)
   }
-
-  // ==========================================================
-  // SIGN OUT
-  // ==========================================================
 
   const handleSignOut = async () => {
     try {
@@ -102,9 +116,9 @@ function AppRoutes() {
     }
   }
 
-  // ==========================================================
-  // ACCOUNT MENU NAVIGATION
-  // ==========================================================
+  // =========================================================
+  // ACCOUNT NAVIGATION
+  // =========================================================
 
   const handleAccountNavigate = (id) => {
     const routes = {
@@ -116,14 +130,12 @@ function AppRoutes() {
 
     const path = routes[id]
 
-    if (path) {
-      navigate(path)
-    }
+    if (path) navigate(path)
   }
 
-  // ==========================================================
-  // SHARED AUTH PROPS
-  // ==========================================================
+  // =========================================================
+  // SHARED PROPS
+  // =========================================================
 
   const authProps = {
     isAuthenticated,
@@ -131,69 +143,34 @@ function AppRoutes() {
     theme,
 
     onThemeToggle: () => {
-      setTheme((prev) =>
-        prev === 'light' ? 'dark' : 'light'
-      )
+      setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
     },
 
     onSignInClick: () => setShowSignIn(true),
-
     onSignUpClick: () => setShowSignUp(true),
-
     onSignOut: handleSignOut,
   }
-
-  // ==========================================================
-  // SIDEBAR PROPS
-  // ==========================================================
 
   const sidebarProps = {
     user,
     isAuthenticated,
-
     onSignInClick: () => setShowSignIn(true),
-
     onSignOut: handleSignOut,
-
     onAccountNavigate: handleAccountNavigate,
-
     mobileOpen: mobileNavOpen,
-
     onMobileClose: () => setMobileNavOpen(false),
   }
 
-  // ==========================================================
-  // NAVBAR PROPS
-  // ==========================================================
-
   const navbarProps = {
     ...authProps,
-
-    onSidebarToggle: () => {
-      setMobileNavOpen((prev) => !prev)
-    },
+    onSidebarToggle: () => setMobileNavOpen((prev) => !prev),
   }
 
-  // ==========================================================
-  // WAIT FOR AUTH INITIALIZATION
-  // ==========================================================
-
-  if (authLoading) {
-    return null
-  }
-
-  // ==========================================================
-  // APP
-  // ==========================================================
+  if (authLoading) return null
 
   return (
     <>
       <Routes>
-
-        {/* ==================================================
-            HOME
-        ================================================== */}
-
         <Route
           path="/"
           element={
@@ -206,23 +183,8 @@ function AppRoutes() {
           }
         />
 
-        {/* ==================================================
-            LEGAL
-        ================================================== */}
-
-        <Route
-          path="/privacy"
-          element={<Privacy {...authProps} />}
-        />
-
-        <Route
-          path="/terms"
-          element={<Terms {...authProps} />}
-        />
-
-        {/* ==================================================
-            MARKETS
-        ================================================== */}
+        <Route path="/privacy" element={<Privacy {...authProps} />} />
+        <Route path="/terms" element={<Terms {...authProps} />} />
 
         <Route
           path="/markets"
@@ -231,24 +193,17 @@ function AppRoutes() {
               {...authProps}
               navbarProps={navbarProps}
               sidebarProps={sidebarProps}
+              stocks={stocks}
+              loading={marketsLoading}
+              error={marketsError}
             />
           }
         />
 
-        {/* ==================================================
-            CASE STUDY
-        ================================================== */}
-
         <Route
           path="/learn/case-studies/:caseStudyId"
-          element={
-            <CaseStudyDetailPage {...authProps} />
-          }
+          element={<CaseStudyDetailPage {...authProps} />}
         />
-
-        {/* ==================================================
-            DASHBOARD
-        ================================================== */}
 
         <Route
           path="/dashboard"
@@ -261,10 +216,6 @@ function AppRoutes() {
           }
         />
 
-        {/* ==================================================
-            BATTLE MODE
-        ================================================== */}
-
         <Route
           path="/battle"
           element={
@@ -275,10 +226,6 @@ function AppRoutes() {
             />
           }
         />
-
-        {/* ==================================================
-            LEARN
-        ================================================== */}
 
         <Route
           path="/learn"
@@ -293,10 +240,6 @@ function AppRoutes() {
           }
         />
 
-        {/* ==================================================
-            WATCHLIST
-        ================================================== */}
-
         <Route
           path="/watchlist"
           element={
@@ -308,10 +251,6 @@ function AppRoutes() {
           }
         />
 
-        {/* ==================================================
-            PROFILE
-        ================================================== */}
-
         <Route
           path="/profile"
           element={
@@ -322,18 +261,9 @@ function AppRoutes() {
             />
           }
         />
-
       </Routes>
 
-      {/* ====================================================
-          AI ASSISTANT
-      ==================================================== */}
-
       <FloatingAIAssistant />
-
-      {/* ====================================================
-          SIGN IN MODAL
-      ==================================================== */}
 
       {showSignIn && (
         <SignInModal
@@ -345,10 +275,6 @@ function AppRoutes() {
           }}
         />
       )}
-
-      {/* ====================================================
-          SIGN UP MODAL
-      ==================================================== */}
 
       {showSignUp && (
         <SignUpModal
@@ -364,23 +290,6 @@ function AppRoutes() {
   )
 }
 
-// ============================================================
-// ROOT APP
-// ============================================================
-//
-// Provider hierarchy:
-//
-// BrowserRouter
-//      ↓
-// AuthProvider       ← provided by main.jsx
-//      ↓
-// AppRoutes
-//
-// IMPORTANT:
-// AuthProvider is NOT placed here because main.jsx already
-// wraps <App /> with AuthProvider.
-// ============================================================
-
 export default function App() {
   return (
     <BrowserRouter>
@@ -388,4 +297,3 @@ export default function App() {
     </BrowserRouter>
   )
 }
-
