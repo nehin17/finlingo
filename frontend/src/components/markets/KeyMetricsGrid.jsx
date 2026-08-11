@@ -48,7 +48,7 @@ const METRICS = [
               key={metric.key}
             >
               <span>{metric.label}</span>
-              <strong>{stock[metric.key]}</strong>
+              <strong>{stock[metric.key] ?? 'Not available'}</strong>
               <small>{metric.description}</small>
             </article>
           ))}

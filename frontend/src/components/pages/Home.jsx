@@ -8,7 +8,10 @@ import FeatureCarousel from '../home/FeatureCarousel.jsx'
 import ProductShowcase from '../home/ScrollShowcase.jsx'
 import FinalCTA from '../home/FinalCTA.jsx'
 
-export default function Home(props) {
+export default function Home({
+  onSignUpClick,
+  ...props
+}) {
   return (
     <div
       className="min-h-screen transition-colors duration-300"
@@ -17,11 +20,14 @@ export default function Home(props) {
         color: 'var(--text)',
       }}
     >
-      <Navbar {...props} />
+      <Navbar
+        {...props}
+        onSignUpClick={onSignUpClick}
+      />
 
       <main className="pt-16">
         <HeroSection
-          onSignUpClick={props.onSignUpClick}
+          onSignUpClick={onSignUpClick}
         />
 
         <MarketTicker />
@@ -40,7 +46,7 @@ export default function Home(props) {
         </div>
 
         <FinalCTA
-          onSignUpClick={props.onSignUpClick}
+          onSignUpClick={onSignUpClick}
         />
       </main>
 

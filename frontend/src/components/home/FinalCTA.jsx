@@ -4,7 +4,9 @@ import Button from '../shared/Button.jsx'
 
 export default function FinalCTA({ onSignUpClick }) {
   return (
-    <section className="relative overflow-hidden py-24 px-6 flex items-center justify-center">
+    <section
+      className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8"
+    >
       {/* Background */}
       <div
         className="absolute inset-0 transition-colors duration-300"
@@ -86,7 +88,7 @@ export default function FinalCTA({ onSignUpClick }) {
             <ArrowRight size={18} />
           </Button>
 
-          <a href="#product-tour">
+          <a href="#product-tour" aria-label="Take a product tour">
             <Button size="lg" variant="secondary">
               Take a product tour
               <ChevronRight size={18} />

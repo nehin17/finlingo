@@ -1,13 +1,19 @@
+// src/components/learn/LearningPaths.jsx
 import LearningPathCard from './LearningPathCard'
 
+/**
+ * PUBLIC CURRICULUM DATA ONLY.
+ * No `progress` field lives here — personal completion is looked up
+ * from the authenticated user's progress.pathProgress map by `id`.
+ */
 const paths = [
   {
+    id: 'valuation-fundamentals',
     name: 'Valuation Fundamentals',
     level: 'Beginner',
     lessons: 8,
     time: '45 min',
     color: '#3B82F6',
-    progress: 35,
     topics: [
       'P/E Ratio',
       'EV/EBITDA',
@@ -20,12 +26,12 @@ const paths = [
     ],
   },
   {
+    id: 'financial-statements',
     name: 'Reading Financial Statements',
     level: 'Beginner',
     lessons: 12,
     time: '1h 20m',
     color: '#10B981',
-    progress: 15,
     topics: [
       'Income Statement',
       'Revenue Recognition',
@@ -42,12 +48,12 @@ const paths = [
     ],
   },
   {
+    id: 'cash-flow-mastery',
     name: 'Cash Flow Mastery',
     level: 'Intermediate',
     lessons: 6,
     time: '55 min',
     color: '#8B5CF6',
-    progress: 0,
     topics: [
       'Operating Cash Flow',
       'Free Cash Flow',
@@ -58,12 +64,12 @@ const paths = [
     ],
   },
   {
+    id: 'moats-competitive-advantage',
     name: 'Competitive Advantage & Moats',
     level: 'Intermediate',
     lessons: 5,
     time: '40 min',
     color: '#EC4899',
-    progress: 0,
     topics: [
       'Pricing Power',
       'Network Effects',
@@ -74,19 +80,27 @@ const paths = [
   },
 ]
 
-export default function LearningPaths() {
+export default function LearningPaths({ progress }) {
   return (
     <div className="mb-16">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-text-primary mb-2">Structured Learning Paths</h2>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">
+          Structured Learning Paths
+        </h2>
         <p className="text-base text-text-muted">
-          Master financial analysis through curated learning tracks designed for different skill levels.
+          Master financial analysis through curated learning tracks designed for
+          different skill levels.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {paths.map((path, i) => (
-          <LearningPathCard key={i} path={path} />
+        {paths.map((path) => (
+          <LearningPathCard
+            key={path.id}
+            path={path}
+            /* undefined when logged out → card renders public metadata only */
+            pathProgress={progress?.pathProgress?.[path.id]}
+          />
         ))}
       </div>
     </div>

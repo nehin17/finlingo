@@ -1,8 +1,13 @@
-import { useState } from 'react'
+// src/components/pages/BattleMode.jsx
+
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
-  Swords, ChevronDown, Sparkles
+  Swords,
+  ChevronDown,
+  Sparkles,
 } from 'lucide-react'
+
 import Sidebar from '../layout/Sidebar.jsx'
 import Navbar from '../layout/Navbar.jsx'
 import BattleScore from '../battle/BattleScore.jsx'
@@ -15,116 +20,257 @@ import TradeoffSection from '../battle/TradeOff.jsx'
 import RiskComparison from '../battle/RiskComparison.jsx'
 import FinalVerdict from '../battle/FinalVerdict.jsx'
 
-const companies = {
+/*
+ * TEMPORARY MOCK DATA
+ *
+ * Keep this shape aligned with the future /api/battle response.
+ * Later, this entire object can be removed and replaced by API data.
+ */
+const MOCK_COMPANIES = {
   NVDA: {
     ticker: 'NVDA',
     name: 'NVIDIA Corp.',
     price: '$875.40',
     change: '+4.28%',
     positive: true,
+
     metrics: {
-      'Revenue Growth': { value: '122%', score: 95 },
-      'Gross Margin': { value: '73.8%', score: 88 },
-      'Operating Margin': { value: '54.1%', score: 92 },
-      'P/E Ratio': { value: '65.2x', score: 55 },
-      'ROE': { value: '88.4%', score: 96 },
-      'Debt/Equity': { value: '0.44', score: 78 },
+      'Revenue Growth': {
+        value: '122%',
+        score: 95,
+      },
+      'Gross Margin': {
+        value: '73.8%',
+        score: 88,
+      },
+      'Operating Margin': {
+        value: '54.1%',
+        score: 92,
+      },
+      'P/E Ratio': {
+        value: '65.2x',
+        score: 55,
+      },
+      ROE: {
+        value: '88.4%',
+        score: 96,
+      },
+      'Debt/Equity': {
+        value: '0.44',
+        score: 78,
+      },
     },
+
     color: '#2563EB',
   },
+
   AAPL: {
     ticker: 'AAPL',
     name: 'Apple Inc.',
     price: '$178.42',
     change: '+1.24%',
     positive: true,
+
     metrics: {
-      'Revenue Growth': { value: '2.1%', score: 42 },
-      'Gross Margin': { value: '45.2%', score: 72 },
-      'Operating Margin': { value: '29.8%', score: 75 },
-      'P/E Ratio': { value: '28.4x', score: 72 },
-      'ROE': { value: '171.1%', score: 99 },
-      'Debt/Equity': { value: '1.78', score: 55 },
+      'Revenue Growth': {
+        value: '2.1%',
+        score: 42,
+      },
+      'Gross Margin': {
+        value: '45.2%',
+        score: 72,
+      },
+      'Operating Margin': {
+        value: '29.8%',
+        score: 75,
+      },
+      'P/E Ratio': {
+        value: '28.4x',
+        score: 72,
+      },
+      ROE: {
+        value: '171.1%',
+        score: 99,
+      },
+      'Debt/Equity': {
+        value: '1.78',
+        score: 55,
+      },
     },
+
     color: '#4F46E5',
   },
+
   MSFT: {
     ticker: 'MSFT',
     name: 'Microsoft Corp.',
     price: '$415.32',
     change: '+0.93%',
     positive: true,
+
     metrics: {
-      'Revenue Growth': { value: '17.6%', score: 75 },
-      'Gross Margin': { value: '69.4%', score: 85 },
-      'Operating Margin': { value: '44.6%', score: 88 },
-      'P/E Ratio': { value: '36.8x', score: 62 },
-      'ROE': { value: '38.7%', score: 80 },
-      'Debt/Equity': { value: '0.31', score: 85 },
+      'Revenue Growth': {
+        value: '17.6%',
+        score: 75,
+      },
+      'Gross Margin': {
+        value: '69.4%',
+        score: 85,
+      },
+      'Operating Margin': {
+        value: '44.6%',
+        score: 88,
+      },
+      ROE: {
+        value: '38.7%',
+        score: 80,
+      },
+      'Debt/Equity': {
+        value: '0.31',
+        score: 85,
+      },
     },
+
     color: '#10B981',
   },
 }
 
-const availableTickers = Object.keys(companies)
+const AVAILABLE_TICKERS = Object.keys(MOCK_COMPANIES)
 
-function CompanySelector({ value, onChange, isOpen, setIsOpen, opposite }) {
-  const data = companies[value]
+function CompanySelector({
+  value,
+  onChange,
+  isOpen,
+  setIsOpen,
+  opposite,
+}) {
+  const company = MOCK_COMPANIES[value]
+
+  function handleToggle() {
+    setIsOpen((previous) => !previous)
+  }
+
+  function handleSelect(ticker) {
+    onChange(ticker)
+    setIsOpen(false)
+  }
+
   return (
-    <div className="relative">
+    <div className="relative min-w-[240px]">
       <button
-        onClick={() => setIsOpen(p => !p)}
-        className={`flex items-center gap-3 px-6 py-4 rounded-2xl border transition-all duration-150 min-w-[240px] ${
-          isOpen
-            ? 'border-primary bg-primary/10'
-            : 'border-border hover:border-border/80 bg-surface-elevated/40'
-        }`}
+        type="button"
+        onClick={handleToggle}
+        className={`
+          flex w-full items-center gap-3
+          rounded-2xl border px-6 py-4
+          transition-all duration-150
+          ${
+            isOpen
+              ? 'border-primary bg-primary/10'
+              : 'border-border bg-surface-elevated/40 hover:border-border/80'
+          }
+        `}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
       >
         <div
-          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: `${data.color}20` }}
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+          style={{
+            background: `${company.color}20`,
+          }}
         >
-          <span className="text-base font-bold" style={{ color: data.color }}>
+          <span
+            className="text-base font-bold"
+            style={{
+              color: company.color,
+            }}
+          >
             {value.slice(0, 2)}
           </span>
         </div>
-        <div className="text-left flex-1">
-          <p className="font-bold text-lg text-text-primary">{value}</p>
-          <p className="text-sm text-text-muted">{data.name}</p>
+
+        <div className="min-w-0 text-left">
+          <p className="font-bold text-text-primary">
+            {value}
+          </p>
+
+          <p className="truncate text-sm text-text-muted">
+            {company.name}
+          </p>
         </div>
+
         <ChevronDown
           size={18}
-          className={`text-text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`
+            ml-auto shrink-0 text-text-muted
+            transition-transform
+            ${isOpen ? 'rotate-180' : ''}
+          `}
+          aria-hidden="true"
         />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 right-0 rounded-xl border border-border bg-surface-elevated/60 shadow-card z-20 overflow-hidden backdrop-blur-sm">
-          {availableTickers
-            .filter(t => t !== opposite)
-            .map(t => (
-              <button
-                key={t}
-                onClick={() => {
-                  onChange(t)
-                  setIsOpen(false)
-                }}
-                className="w-full flex items-center gap-3 px-4 py-4 hover:bg-surface-elevated transition-colors text-left"
-              >
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center"
-                  style={{ background: `${companies[t].color}20` }}
+        <div
+          className="
+            absolute left-0 right-0 top-full z-50 mt-2
+            overflow-hidden rounded-xl
+            border border-border
+            bg-surface-elevated
+            shadow-card
+            backdrop-blur-sm
+          "
+          role="listbox"
+          aria-label="Choose company"
+        >
+          {AVAILABLE_TICKERS
+            .filter((ticker) => ticker !== opposite)
+            .map((ticker) => {
+              const option = MOCK_COMPANIES[ticker]
+
+              return (
+                <button
+                  key={ticker}
+                  type="button"
+                  role="option"
+                  aria-selected={ticker === value}
+                  onClick={() => handleSelect(ticker)}
+                  className="
+                    flex w-full items-center gap-3
+                    px-4 py-4
+                    text-left
+                    transition-colors
+                    hover:bg-surface-elevated
+                  "
                 >
-                  <span className="text-sm font-bold" style={{ color: companies[t].color }}>
-                    {t.slice(0, 2)}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-base font-semibold text-text-primary">{t}</p>
-                  <p className="text-sm text-text-muted">{companies[t].name}</p>
-                </div>
-              </button>
-            ))}
+                  <div
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+                    style={{
+                      background: `${option.color}20`,
+                    }}
+                  >
+                    <span
+                      className="text-sm font-bold"
+                      style={{
+                        color: option.color,
+                      }}
+                    >
+                      {ticker.slice(0, 2)}
+                    </span>
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-base font-semibold text-text-primary">
+                      {ticker}
+                    </p>
+
+                    <p className="truncate text-sm text-text-muted">
+                      {option.name}
+                    </p>
+                  </div>
+                </button>
+              )
+            })}
         </div>
       )}
     </div>
@@ -134,118 +280,335 @@ function CompanySelector({ value, onChange, isOpen, setIsOpen, opposite }) {
 export default function BattleMode(props) {
   const [left, setLeft] = useState('NVDA')
   const [right, setRight] = useState('AAPL')
+
   const [leftOpen, setLeftOpen] = useState(false)
   const [rightOpen, setRightOpen] = useState(false)
 
-  const leftData = companies[left]
-  const rightData = companies[right]
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+
+  /*
+   * TEMPORARY:
+   * This is where the backend response will eventually be stored.
+   *
+   * Example future shape:
+   *
+   * GET /api/battle?left=NVDA&right=AAPL
+   *
+   * {
+   *   leftCompany: {...},
+   *   rightCompany: {...},
+   *   metrics: {...},
+   *   categoryScores: {...},
+   *   risks: [...],
+   *   verdict: {...}
+   * }
+   */
+  const [battleData, setBattleData] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  /*
+   * TEMPORARY MOCK FALLBACK
+   *
+   * This keeps the frontend working while the backend
+   * is being developed separately.
+   */
+  useEffect(() => {
+    setLoading(true)
+    setError(null)
+
+    const timer = setTimeout(() => {
+      setBattleData({
+        leftCompany: MOCK_COMPANIES[left],
+        rightCompany: MOCK_COMPANIES[right],
+      })
+
+      setLoading(false)
+    }, 150)
+
+    return () => clearTimeout(timer)
+  }, [left, right])
+
+  const leftData =
+    battleData?.leftCompany ?? MOCK_COMPANIES[left]
+
+  const rightData =
+    battleData?.rightCompany ?? MOCK_COMPANIES[right]
+
+  const metricKeys = useMemo(
+    () => Object.keys(leftData.metrics),
+    [leftData]
+  )
+
+  function handleLeftChange(ticker) {
+    setLeft(ticker)
+
+    if (ticker === right) {
+      setRight(left)
+    }
+
+    setLeftOpen(false)
+    setRightOpen(false)
+  }
+
+  function handleRightChange(ticker) {
+    setRight(ticker)
+
+    if (ticker === left) {
+      setLeft(right)
+    }
+
+    setLeftOpen(false)
+    setRightOpen(false)
+  }
+
+  function handleNavbarSidebarToggle() {
+    if (props.onSidebarToggle) {
+      props.onSidebarToggle()
+      return
+    }
+
+    setMobileSidebarOpen(true)
+  }
 
   return (
     <div
-      className="flex min-h-screen transition-colors duration-300"
+      className="min-h-screen transition-colors duration-300"
       style={{
         background: 'var(--bg)',
         color: 'var(--text)',
       }}
     >
-      <Sidebar {...props} />
-      <div className="flex-1 ml-20">
-        <Navbar {...props} />
+      <Navbar
+        {...props}
+        onSidebarToggle={handleNavbarSidebarToggle}
+      />
 
-        <main className="pt-24 sm:pt-28 p-8">
-          <div className="max-w-[1200px] mx-auto">
+      <div className="flex w-full">
+        <Sidebar
+          isAuthenticated={props.isAuthenticated}
+          user={props.user}
+          onSignInClick={props.onSignInClick}
+          onSignOut={props.onSignOut}
+          mobileOpen={mobileSidebarOpen}
+          onMobileClose={() => setMobileSidebarOpen(false)}
+          onAccountNavigate={(id) => {
+            console.log('Sidebar action:', id)
+            setMobileSidebarOpen(false)
+          }}
+        />
 
-            {/* ── Page Header ────────────────────────────────────────── */}
-            <div className="text-center mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Swords size={36} className="text-primary" />
-                <h1 className="text-4xl font-bold text-text-primary">Battle Mode</h1>
+        <main
+          className="
+            min-h-screen min-w-0 flex-1
+            px-4 pb-12 pt-20
+            sm:px-6 sm:pt-24
+            lg:px-8
+          "
+        >
+          <div className="mx-auto w-full max-w-[1200px]">
+
+            {/* PAGE HEADER */}
+
+            <div className="mb-16 text-center">
+              <div className="mb-4 flex items-center justify-center gap-3">
+                <Swords
+                  size={36}
+                  className="text-primary"
+                  aria-hidden="true"
+                />
+
+                <h1 className="text-4xl font-bold text-text-primary">
+                  Battle Mode
+                </h1>
               </div>
+
               <p className="text-lg text-text-muted">
                 Professional equity research comparison tool.
               </p>
             </div>
 
-            {/* ── Company Selector ───────────────────────────────────── */}
-            <div className="flex items-center justify-center gap-8 mb-16">
+            {/* COMPANY SELECTORS */}
+
+            <div className="
+              mb-16 flex
+              flex-col items-center justify-center gap-5
+              md:flex-row md:gap-8
+            ">
               <CompanySelector
                 value={left}
-                onChange={setLeft}
+                onChange={handleLeftChange}
                 isOpen={leftOpen}
-                setIsOpen={setLeftOpen}
+                setIsOpen={(value) => {
+                  setLeftOpen(value)
+                  setRightOpen(false)
+                }}
                 opposite={right}
               />
+
               <div className="flex flex-col items-center gap-2">
-                <span className="text-sm font-bold uppercase tracking-widest text-text-muted">vs</span>
-                <Swords size={20} className="text-border" />
+                <span className="
+                  text-sm font-bold uppercase
+                  tracking-widest text-text-muted
+                ">
+                  vs
+                </span>
+
+                <Swords
+                  size={20}
+                  className="text-border"
+                  aria-hidden="true"
+                />
               </div>
+
               <CompanySelector
                 value={right}
-                onChange={setRight}
+                onChange={handleRightChange}
                 isOpen={rightOpen}
-                setIsOpen={setRightOpen}
+                setIsOpen={(value) => {
+                  setRightOpen(value)
+                  setLeftOpen(false)
+                }}
                 opposite={left}
               />
             </div>
 
-            {/* ── Relative Strength Score ───────────────────────────────── */}
+            {/* LOADING */}
+
+            {loading && (
+              <div
+                className="
+                  mb-8 rounded-xl border border-border
+                  bg-surface p-4 text-center
+                  text-sm text-text-muted
+                "
+                role="status"
+              >
+                Updating comparison…
+              </div>
+            )}
+
+            {/* ERROR */}
+
+            {error && (
+              <div
+                className="
+                  mb-8 rounded-xl border border-border
+                  bg-surface p-4 text-center
+                  text-sm text-text-muted
+                "
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
+
+            {/* SCORE */}
+
             <BattleScore
               leftCompany={leftData}
               rightCompany={rightData}
-              metrics={Object.keys(leftData.metrics)}
+              metrics={metricKeys}
             />
 
-            {/* ── Methodology ────────────────────────────────────────── */}
             <Methodology />
 
-            {/* ── Category Scorecards ────────────────────────────────── */}
-            <CategoryScorecard leftCompany={leftData} rightCompany={rightData} />
+            <CategoryScorecard
+              leftCompany={leftData}
+              rightCompany={rightData}
+            />
 
-            {/* ── Detailed Metric Comparison ─────────────────────────── */}
-            <DetailedComparison leftCompany={leftData} rightCompany={rightData} />
+            <DetailedComparison
+              leftCompany={leftData}
+              rightCompany={rightData}
+            />
 
-            {/* ── Analyst Summary ────────────────────────────────────── */}
-            <AnalystSummary leftCompany={leftData} rightCompany={rightData} />
+            <AnalystSummary
+              leftCompany={leftData}
+              rightCompany={rightData}
+            />
 
-            {/* ── Where Each Company Wins ───────────────────────────── */}
-            <CompanyStrengths leftCompany={leftData} rightCompany={rightData} />
+            <CompanyStrengths
+              leftCompany={leftData}
+              rightCompany={rightData}
+            />
 
-            {/* ── The Trade-Off Section ──────────────────────────────── */}
-            <TradeoffSection leftCompany={leftData} rightCompany={rightData} />
+            <TradeoffSection
+              leftCompany={leftData}
+              rightCompany={rightData}
+            />
 
-            {/* ── Key Risks ──────────────────────────────────────────── */}
-            <RiskComparison leftCompany={leftData} rightCompany={rightData} />
+            <RiskComparison
+              leftCompany={leftData}
+              rightCompany={rightData}
+            />
 
-            {/* ── Final Verdict ──────────────────────────────────────── */}
-            <FinalVerdict leftCompany={leftData} rightCompany={rightData} />
+            <FinalVerdict
+              leftCompany={leftData}
+              rightCompany={rightData}
+            />
 
-            {/* ── Ask AI About This Battle ───────────────────────────── */}
+            {/* RESEARCH QUESTIONS */}
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="rounded-2xl p-8 mb-12 border border-border"
-              style={{ background: 'var(--surface)' }}
+              className="
+                mb-12 rounded-2xl
+                border border-border
+                p-6 sm:p-8
+              "
+              style={{
+                background: 'var(--surface)',
+              }}
             >
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
-                  <Sparkles size={20} className="text-primary" />
+              <div className="mb-5 flex items-center gap-3">
+                <div className="
+                  flex h-10 w-10 items-center
+                  justify-center rounded-xl bg-primary/15
+                ">
+                  <Sparkles
+                    size={20}
+                    className="text-primary"
+                    aria-hidden="true"
+                  />
                 </div>
-                <h3 className="text-2xl font-bold text-text-primary">Research Questions</h3>
+
+                <h3 className="
+                  text-xl font-bold
+                  text-text-primary sm:text-2xl
+                ">
+                  Research Questions
+                </h3>
               </div>
-              <p className="text-lg text-text-muted mb-6">
-                Explore contextual research prompts specific to this comparison.
+
+              <p className="
+                mb-6 text-base text-text-muted sm:text-lg
+              ">
+                Explore contextual research prompts specific
+                to this comparison.
               </p>
-              <div className="flex gap-3 flex-wrap">
+
+              <div className="flex flex-wrap gap-3">
                 {[
-                  `What assumptions would justify ${left}'s ${leftData.metrics['P/E Ratio'].value} P/E multiple?`,
+                  `What assumptions would justify ${left}'s ${leftData.metrics['P/E Ratio']?.value ?? 'current'} P/E multiple?`,
                   `How much revenue growth would ${right} need to close the score gap?`,
                   `Which company appears more resilient during a semiconductor downturn?`,
                   `How sensitive is ${left}'s valuation to slowing AI infrastructure spending?`,
-                ].map((prompt, i) => (
+                ].map((prompt) => (
                   <button
-                    key={i}
-                    className="text-base px-4 py-3 rounded-lg border border-border text-text-muted hover:text-primary hover:border-primary transition-all"
+                    key={prompt}
+                    type="button"
+                    className="
+                      rounded-lg border border-border
+                      px-4 py-3 text-left text-sm
+                      text-text-muted
+                      transition-all
+                      hover:border-primary
+                      hover:text-primary
+                      sm:text-base
+                    "
                   >
                     {prompt}
                   </button>
@@ -253,50 +616,93 @@ export default function BattleMode(props) {
               </div>
             </motion.div>
 
-            {/* ── Continue Research ──────────────────────────────────── */}
+            {/* CONTINUE RESEARCH */}
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45 }}
-              className="rounded-2xl p-8 mb-12 border border-border"
-              style={{ background: 'var(--surface)' }}
+              className="
+                mb-12 rounded-2xl
+                border border-border
+                p-6 sm:p-8
+              "
+              style={{
+                background: 'var(--surface)',
+              }}
             >
-              <h3 className="text-2xl font-bold text-text-primary mb-8">Continue Your Research</h3>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="font-semibold text-xl text-text-primary mb-4">{left}</h4>
-                  <div className="space-y-3">
-                    {['Financials', 'SEC Filings', 'Recent News', 'AI Research'].map(item => (
+              <h3 className="
+                mb-8 text-xl font-bold
+                text-text-primary sm:text-2xl
+              ">
+                Continue Your Research
+              </h3>
+
+              <div className="grid gap-8 md:grid-cols-2">
+
+                {[leftData, rightData].map((company) => (
+                  <div key={company.ticker}>
+                    <h4 className="
+                      mb-4 text-xl font-semibold
+                      text-text-primary
+                    ">
+                      {company.ticker}
+                    </h4>
+
+                    <div className="space-y-3">
                       <a
-                        key={item}
-                        href="#"
-                        className="flex items-center gap-2 text-base text-text-muted hover:text-primary transition-colors"
+                        href={`/markets/${encodeURIComponent(company.ticker)}`}
+                        className="
+                          block text-base text-text-muted
+                          transition-colors
+                          hover:text-primary
+                        "
                       >
-                        <span className="text-lg">→</span>
-                        <span>{item}</span>
+                        → Financials
                       </a>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-xl text-text-primary mb-4">{right}</h4>
-                  <div className="space-y-3">
-                    {['Financials', 'SEC Filings', 'Recent News', 'AI Research'].map(item => (
+
                       <a
-                        key={item}
-                        href="#"
-                        className="flex items-center gap-2 text-base text-text-muted hover:text-primary transition-colors"
+                        href={`https://www.sec.gov/edgar/search/#/q=${encodeURIComponent(
+                          company.ticker
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="
+                          block text-base text-text-muted
+                          transition-colors
+                          hover:text-primary
+                        "
                       >
-                        <span className="text-lg">→</span>
-                        <span>{item}</span>
+                        → SEC Filings
                       </a>
-                    ))}
+
+                      <a
+                        href={`/markets/${encodeURIComponent(company.ticker)}#recent-news`}
+                        className="
+                          block text-base text-text-muted
+                          transition-colors
+                          hover:text-primary
+                        "
+                      >
+                        → Recent News
+                      </a>
+
+                      <a
+                        href={`/markets/${encodeURIComponent(company.ticker)}#ai-insight`}
+                        className="
+                          block text-base text-text-muted
+                          transition-colors
+                          hover:text-primary
+                        "
+                      >
+                        → AI Research
+                      </a>
+                    </div>
                   </div>
-                </div>
+                ))}
+
               </div>
             </motion.div>
-
-           
 
           </div>
         </main>

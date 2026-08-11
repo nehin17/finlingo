@@ -3,6 +3,7 @@ import { Landmark } from 'lucide-react';
 export default function FinancialSnapshot({
   financialSnapshot,
 }) {
+  if (!financialSnapshot) return null;
   const metrics = [
     {
       label: 'Revenue',

@@ -1,5 +1,4 @@
 import { LayoutList, SearchX } from 'lucide-react';
-import { enrichStock } from './companyResearchData';
 import StockCard from './StockCard';
 
 export default function StockDiscoveryList({
@@ -10,6 +9,8 @@ export default function StockDiscoveryList({
 }) {
   return (
     <section className="stock-discovery-panel">
+
+      {/* Header */}
       <header className="stock-discovery-header">
         <div>
           <span className="section-eyebrow">
@@ -17,8 +18,12 @@ export default function StockDiscoveryList({
           </span>
 
           <h2>
-            <LayoutList size={17} aria-hidden="true" />
-            {activeFilter === 'All Stocks'
+            <LayoutList
+              size={17}
+              aria-hidden="true"
+            />
+
+            {activeFilter === 'all'
               ? 'All Stocks'
               : activeFilter}
           </h2>
@@ -29,30 +34,37 @@ export default function StockDiscoveryList({
         </span>
       </header>
 
+      {/* Results */}
       {stocks.length > 0 ? (
         <div className="stock-discovery-list">
-          {stocks.map((baseStock) => {
-            const stock = enrichStock(baseStock);
-
-            return (
-              <StockCard
-                key={stock.ticker}
-                stock={stock}
-                isSelected={
-                  stock.ticker === selectedTicker
-                }
-                onClick={() => onSelect(stock.ticker)}
-              />
-            );
-          })}
+          {stocks.map((stock) => (
+            <StockCard
+              key={stock.ticker}
+              stock={stock}
+              isSelected={
+                stock.ticker === selectedTicker
+              }
+              onClick={() =>
+                onSelect(stock.ticker)
+              }
+            />
+          ))}
         </div>
       ) : (
-        <div className="stock-empty-state" role="status">
-          <SearchX size={27} aria-hidden="true" />
+        <div
+          className="stock-empty-state"
+          role="status"
+        >
+          <SearchX
+            size={27}
+            aria-hidden="true"
+          />
+
           <strong>No companies found</strong>
+
           <p>
-            Try searching by a ticker symbol or full company
-            name.
+            Try searching by a ticker symbol or full
+            company name.
           </p>
         </div>
       )}

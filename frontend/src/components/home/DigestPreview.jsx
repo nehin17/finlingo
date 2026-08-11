@@ -9,14 +9,24 @@ import {
   Bell,
 } from 'lucide-react'
 
-const watchlistItems = [
-  { ticker: 'NVDA', change: '+2.3%', positive: true },
-  { ticker: 'AAPL', change: '+0.8%', positive: true },
-  { ticker: 'MSFT', change: '+1.1%', positive: true },
-  { ticker: 'TSLA', change: '-1.8%', positive: false },
-]
+const defaultDigest = {
+  userName: 'Alex',
+  marketPulse:
+    'S&P 500 opened slightly higher on positive jobs data. Semiconductor stocks lead gains (+2.4%), while energy stocks lag amid falling oil prices. Fed meeting minutes are due Thursday.',
+  watchlist: [
+    { ticker: 'NVDA', change: '+2.3%', positive: true },
+    { ticker: 'AAPL', change: '+0.8%', positive: true },
+    { ticker: 'MSFT', change: '+1.1%', positive: true },
+    { ticker: 'TSLA', change: '-1.8%', positive: false },
+  ],
+  lesson: {
+    title: 'Gross Margin',
+    content:
+      'Revenue remaining after deducting direct production costs. A higher gross margin means the company retains more per dollar of revenue. Apple’s gross margin is 44% — exceptional for hardware.',
+  },
+}
 
-export default function DigestPreview() {
+export default function DigestPreview({ digest = defaultDigest }) {
   return (
     <section
       className="
@@ -65,7 +75,6 @@ export default function DigestPreview() {
             boxShadow: '0 4px 14px rgba(37,99,235,0.08)',
           }}
         >
-        
           <span
             className="
               text-[11px]
@@ -130,7 +139,7 @@ export default function DigestPreview() {
           style={{
             background: 'var(--surface)',
             borderColor: 'var(--border)',
-            boxShadow: '0 14px 34px rgba(0,0,0,0.08)',
+            boxShadow: '0 18px 40px rgba(15,23,42,0.10)',
           }}
         >
           {/* Digest Header */}
@@ -155,25 +164,25 @@ export default function DigestPreview() {
               </p>
 
               <h3 className="text-base sm:text-lg font-bold text-text-primary">
-                Alex 👋
+                {digest.userName} 👋
               </h3>
             </div>
 
             <div className="flex items-center gap-1.5 text-xs text-text-muted">
-              <Bell size={13} />
+              <Bell size={13} aria-hidden="true" />
               <span>Daily digest</span>
             </div>
           </div>
 
           {/* Main Content */}
           <div className="px-5 py-4 sm:px-6 sm:py-5 space-y-4">
-
             {/* Market Pulse */}
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles
                   size={14}
                   className="text-primary shrink-0"
+                  aria-hidden="true"
                 />
 
                 <h4 className="text-sm font-semibold text-text-primary">
@@ -189,10 +198,7 @@ export default function DigestPreview() {
                 }}
               >
                 <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-                  S&P 500 opened slightly higher on positive jobs data.
-                  Semiconductor stocks lead gains (+2.4%), while energy
-                  stocks lag amid falling oil prices. Fed meeting minutes
-                  are due Thursday.
+                  {digest.marketPulse}
                 </p>
               </div>
             </div>
@@ -204,7 +210,7 @@ export default function DigestPreview() {
               </h4>
 
               <div className="grid grid-cols-2 gap-2">
-                {watchlistItems.map((item) => {
+                {digest.watchlist.map((item) => {
                   const TrendIcon = item.positive
                     ? TrendingUp
                     : TrendingDown
@@ -229,7 +235,7 @@ export default function DigestPreview() {
                             : 'text-error'
                         }`}
                       >
-                        <TrendIcon size={11} />
+                        <TrendIcon size={11} aria-hidden="true" />
 
                         <span className="text-xs font-bold">
                           {item.change}
@@ -253,6 +259,7 @@ export default function DigestPreview() {
                 <BookOpen
                   size={14}
                   className="text-secondary shrink-0"
+                  aria-hidden="true"
                 />
 
                 <h4 className="text-sm font-semibold text-text-primary">
@@ -269,18 +276,14 @@ export default function DigestPreview() {
                 }}
               >
                 <p className="text-xs sm:text-sm font-semibold text-text-primary mb-1">
-                  Gross Margin
+                  {digest.lesson.title}
                 </p>
 
                 <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-                  Revenue remaining after deducting direct production
-                  costs. A higher gross margin means the company retains
-                  more per dollar of revenue. Apple's gross margin is 44%
-                  — exceptional for hardware.
+                  {digest.lesson.content}
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </motion.div>

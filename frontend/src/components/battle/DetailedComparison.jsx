@@ -1,60 +1,164 @@
+
 import { motion } from 'framer-motion'
 
-export default function DetailedComparison({ leftCompany, rightCompany }) {
-  const metrics = Object.keys(leftCompany.metrics)
+export default function DetailedComparison({
+  leftCompany,
+  rightCompany,
+}) {
+  // Create a union of metric keys from both companies
+  const metrics = Array.from(
+    new Set([
+      ...Object.keys(leftCompany?.metrics || {}),
+      ...Object.keys(rightCompany?.metrics || {}),
+    ])
+  )
 
   return (
-    <div className="mb-12">
-      <h3 className="text-2xl font-bold text-text-primary mb-6">Detailed Financial Comparison</h3>
-      
-      <div className="rounded-2xl border border-border overflow-hidden" style={{ background: 'var(--surface)' }}>
+    <div className="mb-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3
+            className="text-2xl font-bold"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            Detailed Financial Comparison
+          </h3>
+
+          <p
+            className="text-sm mt-1"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            Compare key financial metrics side-by-side to identify
+            strengths, weaknesses, and valuation differences.
+          </p>
+        </div>
+      </div>
+
+      <div
+        className="rounded-2xl border overflow-hidden"
+        style={{
+          background: 'var(--surface)',
+          borderColor: 'var(--border)',
+        }}
+      >
         {/* Header */}
-        <div className="grid grid-cols-3 px-6 py-4 border-b border-border bg-surface-elevated/50">
-          <div className="font-semibold text-lg text-text-primary">{leftCompany.ticker}</div>
-          <div className="text-center font-semibold text-base text-text-muted uppercase">Metric</div>
-          <div className="font-semibold text-lg text-text-primary text-right">{rightCompany.ticker}</div>
+        <div
+          className="grid grid-cols-3 px-6 py-4 border-b text-sm font-semibold"
+          style={{
+            background: 'var(--surface-elevated)',
+            borderColor: 'var(--border)',
+          }}
+        >
+          <div style={{ color: 'var(--text-primary)' }}>
+            {leftCompany?.ticker}
+          </div>
+
+          <div
+            className="text-center uppercase tracking-wide"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            Metric
+          </div>
+
+          <div
+            className="text-right"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {rightCompany?.ticker}
+          </div>
         </div>
 
         {/* Rows */}
-        {metrics.map((metric, i) => {
-          const lm = leftCompany.metrics[metric]
-          const rm = rightCompany.metrics[metric]
-          const lWins = lm.score > rm.score
-          const rWins = rm.score > lm.score
+        {metrics.map((metric, index) => {
+          const leftMetric = leftCompany?.metrics?.[metric]
+          const rightMetric = rightCompany?.metrics?.[metric]
+
+          const leftScore =
+            typeof leftMetric?.score === 'number'
+              ? leftMetric.score
+              : null
+
+          const rightScore =
+            typeof rightMetric?.score === 'number'
+              ? rightMetric.score
+              : null
+
+          const leftWins =
+            leftScore !== null &&
+            rightScore !== null &&
+            leftScore > rightScore
+
+          const rightWins =
+            leftScore !== null &&
+            rightScore !== null &&
+            rightScore > leftScore
 
           return (
             <motion.div
               key={metric}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: i * 0.05 }}
-              className="grid grid-cols-3 items-center px-6 py-5 border-b border-border last:border-0 hover:bg-surface-elevated/20 transition-colors"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.2,
+                delay: index * 0.03,
+              }}
+              className="grid grid-cols-3 items-center px-6 py-5 border-b last:border-b-0 transition-colors hover:bg-surface-elevated/20"
+              style={{ borderColor: 'var(--border)' }}
             >
               {/* Left */}
               <div>
-                <p 
-                  className="font-bold text-2xl"
-                  style={{ color: lWins ? leftCompany.color : 'var(--text-muted)' }}
+                <p
+                  className="font-bold text-xl sm:text-2xl"
+                  style={{
+                    color: leftWins
+                      ? leftCompany?.color
+                      : 'var(--text-primary)',
+                  }}
                 >
-                  {lm.value}
+                  {leftMetric?.value ?? 'N/A'}
                 </p>
-                {lWins && <span className="text-base text-success font-bold">✓ Winner</span>}
+
+                {leftWins && (
+                  <span
+                    className="text-xs font-semibold mt-1 inline-block"
+                    style={{ color: 'var(--success)' }}
+                  >
+                    ✓ Winner
+                  </span>
+                )}
               </div>
 
               {/* Center */}
-              <div className="text-center">
-                <p className="text-base font-semibold text-text-muted">{metric}</p>
+              <div className="text-center px-3">
+                <p
+                  className="text-sm font-medium leading-snug"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  {metric}
+                </p>
               </div>
 
               {/* Right */}
               <div className="text-right">
-                <p 
-                  className="font-bold text-2xl"
-                  style={{ color: rWins ? rightCompany.color : 'var(--text-muted)' }}
+                <p
+                  className="font-bold text-xl sm:text-2xl"
+                  style={{
+                    color: rightWins
+                      ? rightCompany?.color
+                      : 'var(--text-primary)',
+                  }}
                 >
-                  {rm.value}
+                  {rightMetric?.value ?? 'N/A'}
                 </p>
-                {rWins && <span className="text-base text-success font-bold">✓ Winner</span>}
+
+                {rightWins && (
+                  <span
+                    className="text-xs font-semibold mt-1 inline-block"
+                    style={{ color: 'var(--success)' }}
+                  >
+                    ✓ Winner
+                  </span>
+                )}
               </div>
             </motion.div>
           )
@@ -63,3 +167,4 @@ export default function DetailedComparison({ leftCompany, rightCompany }) {
     </div>
   )
 }
+

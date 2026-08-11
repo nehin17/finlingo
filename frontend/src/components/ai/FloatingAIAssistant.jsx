@@ -17,6 +17,7 @@ export default function FloatingAIAssistant({
   // ------------------------------------------------------------
 
   useEffect(() => {
+    if (!open) return
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         setOpen(false)
@@ -34,7 +35,7 @@ export default function FloatingAIAssistant({
         handleKeyDown
       )
     }
-  }, [])
+  }, [open])
 
   return (
     <div
@@ -60,10 +61,12 @@ export default function FloatingAIAssistant({
 
       <AnimatePresence>
         {open && (
+            <div id="atlas-chat-panel">
           <AIChatPanel
             onClose={() => setOpen(false)}
             getResponse={getResponse}
           />
+          </div>
         )}
       </AnimatePresence>
 
@@ -81,7 +84,7 @@ export default function FloatingAIAssistant({
 
         aria-expanded={open}
 
-        aria-controls="finlingo-ai-assistant"
+        aria-controls="atlas-chat-panel"
 
         aria-label={
           open
