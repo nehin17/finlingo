@@ -1,11 +1,8 @@
-// src/components/ai/AIChatPanel.jsx
-
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUp, LoaderCircle, X } from 'lucide-react'
 
 import DemoOrb from '../demo/DemoOrb.jsx'
-
 import chatService from '../../services/chatService.js'
 
 const initialMessages = [
@@ -32,31 +29,12 @@ export default function AIChatPanel({
   const [loading, setLoading] = useState(false)
 
   const messagesEndRef = useRef(null)
-  const timerRef = useRef(null)
-  const mountedRef = useRef(true)
 
   // ------------------------------------------------------------
-  // Cleanup
+  // Restore chat history from localStorage
   // ------------------------------------------------------------
 
- 
   useEffect(() => {
-    mountedRef.current = true // <-- THIS IS THE MAGIC FIX
-    
-    return () => {
-      mountedRef.current = false
-
-      if (timerRef.current) {
-        window.clearTimeout(timerRef.current)
-      }
-    }
-  }, [])
-
-  // ------------------------------------------------------------
-// Restore chat history from localStorage
-// ------------------------------------------------------------
-
-useEffect(() => {
     const history = chatService.getHistory()
   
     if (history.length > 0) {
@@ -70,6 +48,7 @@ useEffect(() => {
       ])
     }
   }, [])
+
   // ------------------------------------------------------------
   // Scroll to newest message
   // ------------------------------------------------------------
@@ -86,10 +65,7 @@ useEffect(() => {
 
   const sendMessage = async (prompt) => {
     const content = prompt.trim()
-
-    if (!content || loading) {
-      return
-    }
+    if (!content || loading) return
 
     const userMessage = {
       id: `${Date.now()}-user`,
@@ -97,45 +73,36 @@ useEffect(() => {
       content,
     }
 
-    setMessages((previousMessages) => [
-      ...previousMessages,
-      userMessage,
-    ])
-
+    setMessages((prev) => [...prev, userMessage])
     setInput('')
     setLoading(true)
 
-    
-    timerRef.current = window.setTimeout(async () => {
-      try {
-        const response = getResponse
-          ? await getResponse(content)
-          : await chatService.sendMessage(content)
-
-        // Force the message into state, bypassing the mounted check
-        setMessages((previousMessages) => [
-          ...previousMessages,
-          {
-            id: `${Date.now()}-assistant`,
-            role: 'assistant',
-            content: response || "I received an empty response from the server.",
-          },
-        ])
-      } catch (error) {
-        console.error("Chat error:", error)
-        setMessages((previousMessages) => [
-          ...previousMessages,
-          {
-            id: `${Date.now()}-error`,
-            role: 'assistant',
-            content: 'I could not complete that request at the moment. Please try again.',
-          },
-        ])
-      } finally {
-        // Guarantee the loading state turns off
-        setLoading(false)
-      }
-    }, 700)
+    try {
+      const response = getResponse
+        ? await getResponse(content)
+        : await chatService.sendMessage(content)
+      
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-assistant`,
+          role: 'assistant',
+          content: response || "No response received.",
+        },
+      ])
+    } catch (error) {
+      console.error("Chat Error:", error)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-error`,
+          role: 'assistant',
+          content: 'Error: Could not reach Atlas.',
+        },
+      ])
+    } finally {
+      setLoading(false)
+    }
   }
 
   // ------------------------------------------------------------
@@ -200,10 +167,7 @@ useEffect(() => {
       }}
     >
 
-      {/* ======================================================
-          HEADER
-      ====================================================== */}
-
+      {/* HEADER */}
       <div
         className="
           flex
@@ -219,16 +183,10 @@ useEffect(() => {
           borderColor: 'var(--border)',
         }}
       >
-
         <div className="flex items-center gap-3 min-w-0">
-
-          {/* Same Atlas used by the website demo */}
           <DemoOrb size={34} />
-
           <div className="min-w-0">
-
             <div className="flex items-center gap-2">
-
               <p
                 className="font-semibold text-sm truncate"
                 style={{
@@ -237,7 +195,6 @@ useEffect(() => {
               >
                 Atlas
               </p>
-
               <span
                 className="
                   inline-flex
@@ -256,12 +213,9 @@ useEffect(() => {
                     background: '#16A34A',
                   }}
                 />
-
                 Online
               </span>
-
             </div>
-
             <p
               className="text-xs truncate mt-0.5"
               style={{
@@ -270,17 +224,13 @@ useEffect(() => {
             >
               FinLingo AI Research Assistant
             </p>
-
           </div>
-
         </div>
-
 
         <button
           type="button"
           onClick={onClose}
           aria-label="Close AI assistant"
-
           className="
             w-9
             h-9
@@ -291,16 +241,13 @@ useEffect(() => {
             shrink-0
             transition-colors
           "
-
           style={{
             color: 'var(--text-muted)',
           }}
-
           onMouseEnter={(event) => {
             event.currentTarget.style.background =
               'var(--surface-elevated)'
           }}
-
           onMouseLeave={(event) => {
             event.currentTarget.style.background =
               'transparent'
@@ -308,14 +255,9 @@ useEffect(() => {
         >
           <X size={18} />
         </button>
-
       </div>
 
-
-      {/* ======================================================
-          CONVERSATION
-      ====================================================== */}
-
+      {/* CONVERSATION */}
       <div
         className="
           flex-1
@@ -327,37 +269,29 @@ useEffect(() => {
         "
         aria-live="polite"
       >
-
         {messages.map((message) => {
-
           const isUser = message.role === 'user'
 
           return (
             <motion.div
               key={message.id}
-
               initial={{
                 opacity: 0,
                 y: 8,
               }}
-
               animate={{
                 opacity: 1,
                 y: 0,
               }}
-
               transition={{
                 duration: 0.2,
               }}
-
               className={`flex gap-2.5 ${
                 isUser
                   ? 'justify-end'
                   : 'justify-start'
               }`}
             >
-
-              {/* Atlas avatar */}
               {!isUser && (
                 <DemoOrb
                   size={28}
@@ -365,8 +299,6 @@ useEffect(() => {
                 />
               )}
 
-
-              {/* Message */}
               <div
                 className="
                   max-w-[84%]
@@ -376,7 +308,6 @@ useEffect(() => {
                   text-sm
                   leading-relaxed
                 "
-
                 style={
                   isUser
                     ? {
@@ -395,39 +326,29 @@ useEffect(() => {
               >
                 {message.content}
               </div>
-
             </motion.div>
           )
         })}
 
-
-        {/* ==================================================
-            LOADING INDICATOR
-        ================================================== */}
-
+        {/* LOADING INDICATOR */}
         <AnimatePresence>
           {loading && (
             <motion.div
               initial={{
                 opacity: 0,
               }}
-
               animate={{
                 opacity: 1,
               }}
-
               exit={{
                 opacity: 0,
               }}
-
               className="flex items-center gap-2.5"
             >
-
               <DemoOrb
                 size={28}
                 animated
               />
-
               <div
                 className="
                   rounded-2xl
@@ -435,52 +356,39 @@ useEffect(() => {
                   px-3.5
                   py-3
                 "
-
                 style={{
                   background:
                     'var(--surface-elevated, rgba(148, 163, 184, 0.12))',
                 }}
               >
-
                 <div className="flex items-center gap-1">
-
                   <span
                     className="w-1.5 h-1.5 rounded-full animate-pulse"
                     style={{
                       background: 'var(--text-muted)',
                     }}
                   />
-
                   <span
                     className="w-1.5 h-1.5 rounded-full animate-pulse"
                     style={{
                       background: 'var(--text-muted)',
                     }}
                   />
-
                   <span
                     className="w-1.5 h-1.5 rounded-full animate-pulse"
                     style={{
                       background: 'var(--text-muted)',
                     }}
                   />
-
                 </div>
-
               </div>
-
             </motion.div>
           )}
         </AnimatePresence>
 
-
-        {/* ==================================================
-            QUICK PROMPTS
-        ================================================== */}
-
+        {/* QUICK PROMPTS */}
         {messages.length === 1 && !loading && (
           <div className="pt-2">
-
             <p
               className="
                 text-xs
@@ -494,16 +402,12 @@ useEffect(() => {
               Suggested questions
             </p>
 
-
             <div className="flex flex-wrap gap-2">
-
               {quickPrompts.map((prompt) => (
-
                 <button
                   key={prompt}
                   type="button"
                   onClick={() => sendMessage(prompt)}
-
                   className="
                     rounded-full
                     border
@@ -513,20 +417,17 @@ useEffect(() => {
                     transition-all
                     duration-150
                   "
-
                   style={{
                     color: 'var(--text-muted)',
                     borderColor: 'var(--border)',
                     background: 'transparent',
                   }}
-
                   onMouseEnter={(event) => {
                     event.currentTarget.style.background =
                       'var(--surface-elevated)'
                     event.currentTarget.style.color =
                       'var(--text)'
                   }}
-
                   onMouseLeave={(event) => {
                     event.currentTarget.style.background =
                       'transparent'
@@ -536,24 +437,15 @@ useEffect(() => {
                 >
                   {prompt}
                 </button>
-
               ))}
-
             </div>
-
           </div>
         )}
 
-
         <div ref={messagesEndRef} />
-
       </div>
 
-
-      {/* ======================================================
-          MESSAGE COMPOSER
-      ====================================================== */}
-
+      {/* MESSAGE COMPOSER */}
       <form
         onSubmit={handleSubmit}
         className="
@@ -565,7 +457,6 @@ useEffect(() => {
           borderColor: 'var(--border)',
         }}
       >
-
         <div
           className="
             flex
@@ -576,25 +467,19 @@ useEffect(() => {
             px-3
             py-2
           "
-
           style={{
             background: 'var(--surface)',
             borderColor: 'var(--border)',
           }}
         >
-
           <input
             value={input}
             onChange={(event) =>
               setInput(event.target.value)
             }
-
             disabled={loading}
-
             placeholder="Ask Atlas about finance..."
-
             aria-label="Ask Atlas a question"
-
             className="
               min-w-0
               flex-1
@@ -602,18 +487,15 @@ useEffect(() => {
               outline-none
               text-sm
             "
-
             style={{
               color: 'var(--text)',
             }}
           />
 
-
           <button
             type="submit"
             disabled={!input.trim() || loading}
             aria-label="Send message"
-
             className="
               w-8
               h-8
@@ -627,13 +509,11 @@ useEffect(() => {
               disabled:opacity-40
               shrink-0
             "
-
             style={{
               background:
                 'linear-gradient(135deg, #2563EB, #4F46E5)',
             }}
           >
-
             {loading ? (
               <LoaderCircle
                 size={16}
@@ -642,11 +522,8 @@ useEffect(() => {
             ) : (
               <ArrowUp size={16} />
             )}
-
           </button>
-
         </div>
-
 
         <p
           className="
@@ -660,9 +537,7 @@ useEffect(() => {
         >
           Atlas provides educational information and does not provide investment advice.
         </p>
-
       </form>
-
     </motion.section>
   )
 }

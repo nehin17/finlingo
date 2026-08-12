@@ -69,11 +69,11 @@ export default function FloatingAIAssistant({
               try {
                 // If a specific ticker is available in the app state, use it. 
                 // Otherwise default to a general prompt or a placeholder like AAPL.
-                const currentTicker = window.location.search.includes('ticker=') 
-                  ? new URLSearchParams(window.location.search).get('ticker') 
-                  : 'AAPL'; 
-                  
-                const data = await api.ai.chat(currentTicker, message);
+                
+                const params = new URLSearchParams(window.location.search);
+                  const currentTicker = params.get('ticker') || null;
+
+                  const data = await api.ai.chat(currentTicker, message);
                 return data.response;
               } catch (error) {
                 console.error("AI Chat Error:", error);

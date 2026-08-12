@@ -21,7 +21,7 @@ public class AiService {
     }
 
     public String generateAnswer(String ticker, String userQuestion, String companyDataContext) {
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + geminiApiKey;
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=" + geminiApiKey;
 
         String prompt = String.format(
             "Company Data Context for %s:\n%s\n\nUser Question: %s",
