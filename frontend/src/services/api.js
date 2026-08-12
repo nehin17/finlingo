@@ -34,9 +34,9 @@ async function apiRequest(endpoint, options = {}) {
     throw new Error(message)
   }
 
-  if (response.status === 204) return null
-
-  return response.json()
+  
+  const text = await response.text()
+  return text ? JSON.parse(text) : null
 }
 
 export const api = {
@@ -91,5 +91,12 @@ export const api = {
 
     getByTerm: (term) =>
       apiRequest(`/terms/${term}`),
+  },
+  ai: {
+    chat: (ticker, message) =>
+      apiRequest('/ai/chat', {
+        method: 'POST',
+        body: JSON.stringify({ ticker, message }),
+      }),
   },
 }

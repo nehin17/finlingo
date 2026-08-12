@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-
+import { api } from '../../services/api.js'
 import DemoOrb from '../demo/DemoOrb.jsx'
 import AIChatPanel from './AIChatPanel.jsx'
 
@@ -60,11 +60,26 @@ export default function FloatingAIAssistant({
       ====================================================== */}
 
       <AnimatePresence>
+        
         {open && (
             <div id="atlas-chat-panel">
           <AIChatPanel
             onClose={() => setOpen(false)}
-            getResponse={getResponse}
+            getResponse={async (message) => {
+              try {
+                // If a specific ticker is available in the app state, use it. 
+                // Otherwise default to a general prompt or a placeholder like AAPL.
+                const currentTicker = window.location.search.includes('ticker=') 
+                  ? new URLSearchParams(window.location.search).get('ticker') 
+                  : 'AAPL'; 
+                  
+                const data = await api.ai.chat(currentTicker, message);
+                return data.response;
+              } catch (error) {
+                console.error("AI Chat Error:", error);
+                return "I'm having trouble connecting to my servers right now.";
+              }
+            }}
           />
           </div>
         )}

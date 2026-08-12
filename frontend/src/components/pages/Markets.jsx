@@ -1,7 +1,7 @@
 
 // src/components/pages/Markets.jsx
 import { api } from '../../services/api.js'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 import Sidebar from '../layout/Sidebar.jsx'
 import Navbar from '../layout/Navbar.jsx'
@@ -168,6 +168,25 @@ export default function Markets({
 
   const [mobileSidebarOpen, setMobileSidebarOpen] =
     useState(false)
+    // Load saved watchlist on component mount
+  useEffect(() => {
+    async function loadWatchlist() {
+      try {
+        const data = await api.watchlist.getAll()
+        const tickers = Array.isArray(data)
+          ? data.map((item) => (typeof item === 'string' ? item : item.ticker))
+          : []
+        setWatchedTickers(new Set(tickers))
+      } catch (err) {
+        console.error('Failed to fetch initial watchlist:', err)
+      }
+    }
+
+    if (isAuthenticated) {
+      loadWatchlist()
+    }
+  }, [isAuthenticated])
+
 
   const visibleStocks = useMemo(
     () =>

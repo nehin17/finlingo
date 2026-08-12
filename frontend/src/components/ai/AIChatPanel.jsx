@@ -39,7 +39,10 @@ export default function AIChatPanel({
   // Cleanup
   // ------------------------------------------------------------
 
+ 
   useEffect(() => {
+    mountedRef.current = true // <-- THIS IS THE MAGIC FIX
+    
     return () => {
       mountedRef.current = false
 
@@ -102,42 +105,35 @@ useEffect(() => {
     setInput('')
     setLoading(true)
 
+    
     timerRef.current = window.setTimeout(async () => {
       try {
         const response = getResponse
           ? await getResponse(content)
           : await chatService.sendMessage(content)
 
-        if (!mountedRef.current) {
-          return
-        }
-
+        // Force the message into state, bypassing the mounted check
         setMessages((previousMessages) => [
           ...previousMessages,
           {
             id: `${Date.now()}-assistant`,
             role: 'assistant',
-            content: response,
+            content: response || "I received an empty response from the server.",
           },
         ])
       } catch (error) {
-        if (!mountedRef.current) {
-          return
-        }
-
+        console.error("Chat error:", error)
         setMessages((previousMessages) => [
           ...previousMessages,
           {
             id: `${Date.now()}-error`,
             role: 'assistant',
-            content:
-              'I could not complete that request at the moment. Please try again.',
+            content: 'I could not complete that request at the moment. Please try again.',
           },
         ])
       } finally {
-        if (mountedRef.current) {
-          setLoading(false)
-        }
+        // Guarantee the loading state turns off
+        setLoading(false)
       }
     }, 700)
   }

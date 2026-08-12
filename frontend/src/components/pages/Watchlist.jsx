@@ -587,6 +587,14 @@ export default function Watchlist({
       setLoading(false)
     }
   }, [])
+  // ─────────────────────────────────────────────────────────
+  // EXECUTE ON MOUNT
+  // ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadWatchlist()
+    }
+  }, [isAuthenticated, loadWatchlist])
 
   // ─────────────────────────────────────────────────────────
   // DERIVED VALUES

@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/companies/**").permitAll()
                 .requestMatchers("/api/terms/**").permitAll()
                 .requestMatchers("/api/ingest/**").permitAll()
+                .requestMatchers("/api/ai/**").permitAll() // <-- Added the AI endpoint here!
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
