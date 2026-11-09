@@ -1,0 +1,313 @@
+/* src/styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   THEME VARIABLES
+   ========================================= */
+
+:root {
+  /* Light mode (default) */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-elevated: #f8fafc;
+  --surface-hover: #f8fafc;
+  --surface-2: #f1f5f9;
+
+  --text: #0f172a;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+
+  --border: #e2e8f0;
+  --divider: #e2e8f0;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+  --error: #dc2626;
+  --warning: #f59e0b;
+
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+/* Dark mode — triggered by App.jsx adding 'dark' class to <html> */
+html.dark {
+  --bg: #0b1220;
+  --surface: #111827;
+  --surface-elevated: #1e293b;
+  --surface-hover: #1e293b;
+  --surface-2: #1f2937;
+
+  --text: #f8fafc;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --border: #243244;
+  --divider: #243244;
+
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+
+  --success: #22c55e;
+  --danger: #ef4444;
+  --error: #ef4444;
+  --warning: #f59e0b;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================
+   BASE STYLES
+   ========================================= */
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text-primary);
+  }
+
+  ::selection {
+    background: rgba(37, 99, 235, 0.2);
+    color: var(--text-primary);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--surface-elevated);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+
+  /* Links */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* =========================================
+   COMPONENTS
+   ========================================= */
+
+@layer components {
+  /* Primary Button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200;
+    background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.18), 0 0 0 1px rgba(37, 99, 235, 0.12);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(37, 99, 235, 0.04);
+  }
+
+  /* Card Base */
+  .card-base {
+    @apply rounded-2xl border transition-all duration-200;
+    background: var(--surface);
+    border-color: var(--border);
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    border-color: rgba(37, 99, 235, 0.2);
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.08);
+  }
+
+  /* Section Padding */
+  .section-padding {
+    @apply py-24 px-6 md:px-10 lg:px-16;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Blue Glow */
+  .glow-blue {
+    box-shadow: 0 0 40px rgba(37, 99, 235, 0.15);
+  }
+
+  /* Focus Accessibility */
+  .focus-ring {
+    outline: none;
+  }
+
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  /* Status Pills */
+  .pill-success {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-sm font-medium;
+    background: rgba(22, 163, 74, 0.12);
+    color: var(--success);
+  }
+
+  .pill-danger {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-sm font-medium;
+    background: rgba(220, 38, 38, 0.12);
+    color: var(--danger);
+  }
+
+  /* Input Styles */
+  input,
+  textarea,
+  select {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  input::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+/* =========================================
+   UTILITIES
+   ========================================= */
+
+@layer utilities {
+  .animate-delay-120 {
+    animation-delay: 120ms;
+  }
+
+  .animate-delay-240 {
+    animation-delay: 240ms;
+  }
+
+  .animate-delay-360 {
+    animation-delay: 360ms;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .surface {
+    background: var(--surface);
+  }
+
+  .surface-elevated {
+    background: var(--surface-elevated);
+  }
+
+  .surface-2 {
+    background: var(--surface-2);
+  }
+
+  .text-muted {
+    color: var(--text-muted);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .border-default {
+    border-color: var(--border);
+  }
+
+  .bg-primary {
+    background: var(--primary);
+  }
+
+  .text-primary {
+    color: var(--primary);
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
